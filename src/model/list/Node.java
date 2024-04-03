@@ -8,14 +8,24 @@ import java.util.List;
 
 public class Node {
 
-    int block;
+    private int block;
+    private Player owner;
+    private Property property;
     List<Player> playersOnThisLand = new ArrayList<Player>();
-    Player owner;
+
 
     Node next;
     public Node() {
         this.block = 1;
         this.playersOnThisLand = new ArrayList<>();
+    }
+
+    public void getOwner() {
+        System.out.println(owner.getName());
+    }
+
+    public Property getProperty() {
+        return property;
     }
 
     public void addPlayer(Player player) {

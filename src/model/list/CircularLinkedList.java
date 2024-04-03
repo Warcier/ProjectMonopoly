@@ -11,6 +11,9 @@ public class CircularLinkedList {
     private int size;
     private static final int MAX_SIZE = 22;
 
+    /**
+     * Constructor
+     */
     public CircularLinkedList(){
         head = null;
         tail = null;
@@ -37,12 +40,9 @@ public class CircularLinkedList {
                 tail.next = head;
             }
 
-
             // Increase the size of the list
             size++;
         }
-
-
     }
 
     /**
@@ -94,7 +94,6 @@ public class CircularLinkedList {
         } catch (Exception e) {
             System.out.println("An error occurred while trying to move the player: " + e.getMessage());
         }
-
     }
 
     /**

@@ -1,8 +1,11 @@
+import gameutils.GameLogic;
 import model.Player;
 import model.list.CircularLinkedList;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static gameutils.GameLogic.*;
 
 public class Main {
 
@@ -11,6 +14,7 @@ public class Main {
         // Player reference
         List<Player> players = new ArrayList<>();
         CircularLinkedList list = new CircularLinkedList();
+
 
         //Init Player
         players.add(new Player("Player 1"));
@@ -26,13 +30,10 @@ public class Main {
         List<Player> playersCopy = new ArrayList<>(players);
         list.AddPlayer(playersCopy);
 
-        list.movePlayerToNextNode(players.get(0));
-        list.movePlayerToNextNode(players.get(0));
-        list.movePlayerToNextNode(players.get(0));
-
-        list.movePlayerToNextNode(players.get(1));
-        list.movePlayerToNextNode(players.get(1));
-        list.movePlayerToNextNode(players.get(1));
+        movePlayer(list, players.get(0), 5);
+        movePlayer(list, players.get(0), 5);
+        movePlayer(list, players.get(1), 4);
+        movePlayer(list, players.get(2), 3);
 
 
         list.ShowAllPlayerPostion();
