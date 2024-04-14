@@ -57,4 +57,9 @@ public class DicePanel extends javax.swing.JPanel {
         }
 	
     }
+
+    public void getDiceFace(int faceValue){
+        this.faceValue = faceValue;
+        repaint();
+    }
 }

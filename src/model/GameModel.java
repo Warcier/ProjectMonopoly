@@ -14,6 +14,7 @@ public class GameModel {
     public GameModel() {
         this.board = new CircularLinkedList(test.initPlayer(), test.initProperty());
         this.turnController = new TurnController(test.initPlayer());
+        this.dice = new Dice();
     }
 
     public void setGameController(GameController gameController) {
@@ -32,6 +33,11 @@ public class GameModel {
         dice.roll();
     }
 
+    // get dice num for View
+    public int getDiceNum() {
+        return dice.getDiceNumber();
+    }
+
     public void buyProperty() {
         board.checkIfBuyOrPayRent(turnController.getCurrentPlayer(), board.findPlayerNode(turnController.getCurrentPlayer()));
     }
@@ -47,5 +53,10 @@ public class GameModel {
     public boolean checkWinCondition() {
         // Implement check win condition logic here
         return board.checkWinCondition();
+    }
+
+    public Player getCurrPlayer(){
+        //get current Player
+        return turnController.getCurrentPlayer();
     }
 }

@@ -4,6 +4,8 @@ import model.*;
 import model.list.CircularLinkedList;
 import view.GameView;
 
+import java.util.*; 
+
 public class GameController {
 
     private GameModel gameModel;
@@ -24,6 +26,11 @@ public class GameController {
         gameModel.moveCurrentPlayer();
     }
 
+    public int getDiceNum(){
+        // Get dice number to show in view
+        return gameModel.getDiceNum();
+    }
+
     public void buyProperty() {
         // Implement buy property logic here
         gameModel.buyProperty();
@@ -36,8 +43,24 @@ public class GameController {
 
     }
 
-    public void nextPlayer() {
+    public Player nextPlayer() {
         // Implement next player logic here
         gameModel.endTurn();
+
+        //get next player;
+        return gameModel.getCurrPlayer();
     }
+    public List<Player> getPlayers() {
+        // get player list from model
+        // Returns an unmodifiable list to prevent modification from the view
+        return Collections.unmodifiableList(gameModel.getBoard().getPlayers());
+    }
+
+    public void updateViewPlayers(){
+        // get slot details
+        List<Player> players = getPlayers();
+        gameView.updatePlayers(players);
+    }
+
+    //TODO: get current round player information
 }

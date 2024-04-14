@@ -42,6 +42,7 @@ public class test {
         properties.add(new Property("Slot 21", 21000));
         properties.add(new Property("Slot 22", 22000));
         properties.add(new Property("Slot 23", 23000));
+        properties.add(new Property("Slot 24", 24000));
 
         return properties;
     }
