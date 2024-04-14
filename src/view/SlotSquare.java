@@ -1,5 +1,7 @@
 package view;
 
+import model.Property;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -10,9 +12,12 @@ public class SlotSquare extends javax.swing.JPanel{
     private JLayeredPane slotPanel;
     private JLabel nameLabel;
     private JLabel priceLabel;
+
+    // TODO: Set Property to Label
+    private Property property;
     
     private String[] slotNames = java.util.stream.IntStream.rangeClosed(1, 44).mapToObj(i -> "Name" + i).toArray(String[]::new);
-    private String[] slotPrices = new String[44];    
+    private String[] slotPrices = new String[44];
     private double slotPrice;
     private String slotName;
     private double rent;
@@ -71,6 +76,8 @@ public class SlotSquare extends javax.swing.JPanel{
 		this.add(nameLabel);
                 this.add(priceLabel);
 		}}
+
+
     private JLabel setupLabel(String text, int rotationDegrees) {
         JLabel label = new JLabel(text) {
             protected void paintComponent(Graphics g) {

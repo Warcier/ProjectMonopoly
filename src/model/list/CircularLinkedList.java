@@ -3,6 +3,7 @@ package model.list;
 import model.Player;
 import model.Property;
 
+import java.awt.color.ICC_Profile;
 import java.util.List;
 
 public class CircularLinkedList {
@@ -32,13 +33,6 @@ public class CircularLinkedList {
 
     public List<Property> getProperties() {
         return properties;
-    }
-
-    public void isPlayerBankrupt(Player player) {
-        if (player.getCash() <= 0) {
-            player.playerBankrupted();
-            removePlayers(player);
-        }
     }
 
     /**
@@ -94,31 +88,11 @@ public class CircularLinkedList {
         return null;
     }
 
-
-    public void buyProperty(Player player) {
-        Node current = findPlayerNode(player);
-        if (current != null) {
-            player.addProperty(current.getProperty());
-            current.setOwner(player);
+    public void isPlayerBankrupt(Player player) {
+        if (player.getCash() <= 0) {
+            player.playerBankrupted();
+            removePlayers(player);
         }
-    }
-
-    public void giveBonusGO(Player player) {
-        Node current = findPlayerNode(player);
-        if (current == head) {
-            player.setCash(2000);
-        }
-    }
-
-    public boolean isPropertyOwned(Node node) {
-        return node.getOwner() != null;
-    }
-
-    public Player propertyOwner(Node node) {
-        if (node.getOwner() != null) {
-            return node.getOwner();
-        }
-        return null;
     }
 
     public void payRent(Player rentPlayer, Node node) {
@@ -133,12 +107,41 @@ public class CircularLinkedList {
         isPlayerBankrupt(rentPlayer);
     }
 
+    public void buyProperty(Player player) {
+        Node current = findPlayerNode(player);
+        if (current != null) {
+            if (current.getProperty().getLandPrice() > player.getCash()) {
+                this.removePlayers(player);
+                return;
+            }
+            player.addProperty(current.getProperty());
+            current.setOwner(player);
+        }
+    }
+
+    public void giveBonusGO(Player player) {
+            player.setCash(2000);
+    }
+
+    public boolean isPropertyOwned(Node node) {
+        return node.getOwner() != null;
+    }
+
+    public Player propertyOwner(Node node) {
+        if (node.getOwner() != null) {
+            return node.getOwner();
+        }
+        return null;
+    }
+
     public void checkIfBuyOrPayRent(Player player, Node node) {
         if (isPropertyOwned(node)) {
             payRent(player, node);
         } else {
             buyProperty(player);
         }
+
+
     }
 
     /**
@@ -152,6 +155,9 @@ public class CircularLinkedList {
                     if (current.playersOnThisLand.contains(movingPlayer)) {
                         current.playersOnThisLand.remove(movingPlayer);
                         current.next.playersOnThisLand.add(movingPlayer);
+                        if (current.next == head) {
+                            giveBonusGO(movingPlayer);
+                        }
                         return;
                     }
                     current = current.next;
@@ -169,6 +175,15 @@ public class CircularLinkedList {
         this.players.remove(player);
     }
 
+
+
+
+    public void getNodeInfo(Node node) {
+        System.out.println("Slot: " + node.getSlot());
+        System.out.println("Property: " + node.getProperty().getLandName());
+        System.out.println("Owner: " + node.getOwner());
+        System.out.println("Rent Price: " + node.getProperty().getRentPrice());
+    }
 
     /**
      * Show all player position
@@ -191,4 +206,7 @@ public class CircularLinkedList {
     }
 
 
+    public boolean checkWinCondition() {
+        return players.size() == 1;
+    }
 }

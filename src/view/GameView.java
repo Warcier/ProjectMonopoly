@@ -27,6 +27,10 @@ public class GameView extends javax.swing.JFrame {
     private DicePanel dice1;
     private DicePanel dice2;
 
+    public void setGameController(GameController gameController) {
+        this.gameController = gameController;
+    }
+
     public GameView() {
         //initComponents();
         setPreferredSize(new Dimension(1240, 850));
@@ -43,6 +47,7 @@ public class GameView extends javax.swing.JFrame {
         logText = new JTextArea();
 	    logText.setFont(new Font("Arial", Font.PLAIN, 12));
         gameLog = new JScrollPane(logText);
+
         // manual adjest gamelog coordinate (todo automate)
         gameLog.setBounds(820,350,400,200);
         gameLog.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -65,26 +70,31 @@ public class GameView extends javax.swing.JFrame {
         nextRoundBut.setFont(new Font("Arial", Font.PLAIN, 14));
         // todo nextRound function
         nextRoundBut.setBounds(920,750,170,35);
+
         // Roll dice Button        
         rollDiceBut = new JButton("Roll Dice");
         rollDiceBut.setFont(new Font("Arial", Font.PLAIN, 14));
             // todo rollDice function
         rollDiceBut.setBounds(920,650,170,35);
+
         // Pay rent Button    
         payRentBut = new JButton("Pay Rent");
         payRentBut.setFont(new Font("Arial", Font.PLAIN, 14));
             // todo Pay rent function
         payRentBut.setBounds(1090,700,130,35);
+
         // Buy slot Button
         buyBut = new JButton("Buy");
         buyBut.setFont(new Font("Arial", Font.PLAIN, 14));
             // todo buy slot function
         buyBut.setBounds(820,700,130,35);
+
        // Sold slot Button
         soldBut = new JButton("Sold");
         soldBut.setFont(new Font("Arial", Font.PLAIN, 14));
             // todo sold slot function
         soldBut.setBounds(955,700,130,35);
+
         // Dice 1
         dice1 = new DicePanel(300,350,80,80);
         //Dice 2
@@ -109,6 +119,23 @@ public class GameView extends javax.swing.JFrame {
         logText.append("> "+log+"\n");
     }
 
+    public void showPropertyInfo(String message){
+        JOptionPane.showMessageDialog(this, message);
+    }
+
+
+    private void bNextPlayerActionPerformed(java.awt.event.ActionEvent evt) {
+        gameController.nextPlayer();
+    }
+
+    private void bRollDiceActionPerformed(java.awt.event.ActionEvent evt) {
+        gameController.rollDice();
+    }
+
+    private void bBuyActionPerformed(java.awt.event.ActionEvent evt) {
+        gameController.buyProperty();
+    }
+
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -123,13 +150,8 @@ public class GameView extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GameView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GameView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GameView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(GameView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
@@ -142,7 +164,5 @@ public class GameView extends javax.swing.JFrame {
         });
     }
 
-    public void setGameController(GameController gameController) {
-        this.gameController = gameController;
-    }
+
 }

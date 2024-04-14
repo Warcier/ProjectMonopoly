@@ -42,6 +42,7 @@ public class BoardPanel extends javax.swing.JPanel {
         this.add(square0);
         Square square1 = new Square(0+squareWidth,0+squareHeight,squareWidth,squareHeight,1,180);
         this.add(square1);*/
+
         // add slot square to board
         for(int i=0;i<squareCount;i++){
             int x,y;
@@ -65,6 +66,7 @@ public class BoardPanel extends javax.swing.JPanel {
                 x = xOffset;
                 y = yOffset + ((44-i))*squareHeight;
             }
+
             // create square
             squares[i] = new SlotSquare(x, y, squareWidth, squareHeight, i, rotationAngles[i]);
             this.add(squares[i]);

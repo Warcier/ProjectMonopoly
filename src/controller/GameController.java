@@ -1,6 +1,7 @@
 package controller;
 
 import model.*;
+import model.list.CircularLinkedList;
 import view.GameView;
 
 public class GameController {
@@ -16,6 +17,7 @@ public class GameController {
         this.gameView = gameView;
     }
 
+
     public void rollDice() {
         // Implement roll dice logic here
         gameModel.rollDice();
@@ -24,9 +26,18 @@ public class GameController {
 
     public void buyProperty() {
         // Implement buy property logic here
+        gameModel.buyProperty();
     }
 
+    // Call every turn to check if a player has won
     public void checkWinCondition() {
         // Implement check win condition logic here
+        gameModel.checkWinCondition();
+
+    }
+
+    public void nextPlayer() {
+        // Implement next player logic here
+        gameModel.endTurn();
     }
 }
