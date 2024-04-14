@@ -128,7 +128,7 @@ public class GameView extends javax.swing.JFrame {
                     dice2.getDiceFace(diceNumber-6);
                 }
                 showGameMessage("Roll Dice : "+ diceNumber);
-                gameBoard.movePlayerChess(1,3);
+                
                 rollDiceBut.setEnabled(false);
                 payRentBut.setEnabled(true);
                 buyBut.setEnabled(true);
