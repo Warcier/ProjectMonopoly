@@ -22,6 +22,7 @@ public class SlotSquare extends javax.swing.JPanel{
     public SlotSquare(int xCoord, int yCoord, int width, int height,int slotNum, int rotationDegrees) {
         setBorder(new LineBorder(new Color(0,0,0)));
         setBounds(xCoord,yCoord,width,height);
+        setBackground(new Color(255, 255, 255));
         // testing slotPrice
         Arrays.fill(slotPrices,"100");
         //

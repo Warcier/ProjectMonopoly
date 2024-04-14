@@ -91,6 +91,10 @@ public class PlayerPanel extends JPanel{
         addPlayer2.setEnabled(false);
         addPlayer3.setEnabled(false);
         addPlayer4.setEnabled(false);
+        addPlayer1Name.setEnabled(false);
+        addPlayer2Name.setEnabled(false);
+        addPlayer3Name.setEnabled(false);
+        addPlayer4Name.setEnabled(false);
     }
     /**
      * This method is called from within the constructor to initialize the form.

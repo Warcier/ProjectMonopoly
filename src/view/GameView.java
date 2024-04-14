@@ -9,9 +9,11 @@ import view.DicePanel;
 import view.BoardPanel;
 import view.SlotSquare;
 import view.PlayerPanel;
+import controller.*;
 
 public class GameView extends javax.swing.JFrame {
     
+    private GameController controll;
     private BoardPanel gameBoard;
     private PlayerPanel gamePlayer;
     private JTextArea logText;
@@ -20,21 +22,21 @@ public class GameView extends javax.swing.JFrame {
     private JButton nextRoundBut;
     private JButton rollDiceBut;
     private JButton payRentBut;
-    private JButton soldBut;
     private JButton buyBut;
     private DicePanel dice1;
     private DicePanel dice2;
 
     public GameView() {
         //initComponents();
-        setPreferredSize(new Dimension(1240, 850));
+        setPreferredSize(new Dimension(1400, 750));
         setLayout(null);
         
         // Board
-        gameBoard = new BoardPanel(2,2);
+        gameBoard = new BoardPanel(10,20);
+        gameBoard.setBackground(new Color(51, 255, 153));
         getContentPane().add(gameBoard);
         // Player Section
-        gamePlayer = new PlayerPanel(820,2);
+        gamePlayer = new PlayerPanel(950,10);
         getContentPane().add(gamePlayer);
 
         // Game log
@@ -42,7 +44,7 @@ public class GameView extends javax.swing.JFrame {
 	    logText.setFont(new Font("Arial", Font.PLAIN, 12));
         gameLog = new JScrollPane(logText);
         // manual adjest gamelog coordinate (todo automate)
-        gameLog.setBounds(820,350,400,200);
+        gameLog.setBounds(950,350,400,200);
         gameLog.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         
         // Start Game Button
@@ -56,37 +58,32 @@ public class GameView extends javax.swing.JFrame {
             }});
 
         startGameBut.setFont(new Font("Arial", Font.PLAIN, 14));
-        startGameBut.setBounds(920,310,170,35);
+        startGameBut.setBounds(1060,310,170,35);
         
         // Next Round Button          
         nextRoundBut = new JButton("Next Round");
         nextRoundBut.setFont(new Font("Arial", Font.PLAIN, 14));
         // todo nextRound function
-        nextRoundBut.setBounds(920,750,170,35);
+        nextRoundBut.setBounds(1060,650,170,35);
         // Roll dice Button        
         rollDiceBut = new JButton("Roll Dice");
         rollDiceBut.setFont(new Font("Arial", Font.PLAIN, 14));
             // todo rollDice function
-        rollDiceBut.setBounds(920,650,170,35);
+        rollDiceBut.setBounds(1060,550,170,35);
         // Pay rent Button    
         payRentBut = new JButton("Pay Rent");
         payRentBut.setFont(new Font("Arial", Font.PLAIN, 14));
             // todo Pay rent function
-        payRentBut.setBounds(1090,700,130,35);
+        payRentBut.setBounds(1170,600,170,35);
         // Buy slot Button
         buyBut = new JButton("Buy");
         buyBut.setFont(new Font("Arial", Font.PLAIN, 14));
             // todo buy slot function
-        buyBut.setBounds(820,700,130,35);
-       // Sold slot Button
-        soldBut = new JButton("Sold");
-        soldBut.setFont(new Font("Arial", Font.PLAIN, 14));
-            // todo sold slot function
-        soldBut.setBounds(955,700,130,35);
+        buyBut.setBounds(950,600,170,35);
         // Dice 1
-        dice1 = new DicePanel(300,350,80,80);
+        dice1 = new DicePanel(300,350,40,40);
         //Dice 2
-        dice2 = new DicePanel(500,350,80,80);
+        dice2 = new DicePanel(500,350,40,40);
         
         // add to main frame
         getContentPane().add(gameLog);
@@ -94,7 +91,6 @@ public class GameView extends javax.swing.JFrame {
         getContentPane().add(nextRoundBut);
         getContentPane().add(rollDiceBut);
         getContentPane().add(buyBut);
-        getContentPane().add(soldBut);
         getContentPane().add(payRentBut);
         gameBoard.add(dice1);
         gameBoard.add(dice2);
@@ -109,11 +105,6 @@ public class GameView extends javax.swing.JFrame {
 
 
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-        * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-        */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
