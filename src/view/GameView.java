@@ -5,6 +5,7 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
+import controller.GameController;
 import view.DicePanel;
 import view.BoardPanel;
 import view.SlotSquare;
@@ -12,8 +13,8 @@ import view.PlayerPanel;
 import controller.*;
 
 public class GameView extends javax.swing.JFrame {
-    
-    private GameController controll;
+
+    GameController gameController;
     private BoardPanel gameBoard;
     private PlayerPanel gamePlayer;
     private JTextArea logText;
@@ -25,6 +26,10 @@ public class GameView extends javax.swing.JFrame {
     private JButton buyBut;
     private DicePanel dice1;
     private DicePanel dice2;
+
+    public void setGameController(GameController gameController) {
+        this.gameController = gameController;
+    }
 
     public GameView() {
         //initComponents();
@@ -43,6 +48,7 @@ public class GameView extends javax.swing.JFrame {
         logText = new JTextArea();
 	    logText.setFont(new Font("Arial", Font.PLAIN, 12));
         gameLog = new JScrollPane(logText);
+
         // manual adjest gamelog coordinate (todo automate)
         gameLog.setBounds(950,350,400,200);
         gameLog.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -103,6 +109,23 @@ public class GameView extends javax.swing.JFrame {
         logText.append("> "+log+"\n");
     }
 
+    public void showPropertyInfo(String message){
+        JOptionPane.showMessageDialog(this, message);
+    }
+
+
+    private void bNextPlayerActionPerformed(java.awt.event.ActionEvent evt) {
+        gameController.nextPlayer();
+    }
+
+    private void bRollDiceActionPerformed(java.awt.event.ActionEvent evt) {
+        gameController.rollDice();
+    }
+
+    private void bBuyActionPerformed(java.awt.event.ActionEvent evt) {
+        gameController.buyProperty();
+    }
+
 
     public static void main(String args[]) {
         try {
@@ -112,13 +135,8 @@ public class GameView extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GameView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GameView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GameView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(GameView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
@@ -130,4 +148,6 @@ public class GameView extends javax.swing.JFrame {
             }
         });
     }
+
+
 }
