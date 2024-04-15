@@ -8,7 +8,11 @@ import javax.swing.border.LineBorder;
  * @author User
  */
 public class DicePanel extends javax.swing.JPanel {
-
+    /**
+     Function todo
+     get diceValue()
+     
+     */
     // var
     private int faceValue = 1;
     

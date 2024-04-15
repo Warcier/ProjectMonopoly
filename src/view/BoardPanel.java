@@ -6,7 +6,6 @@ import javax.swing.border.*;
 
 import model.Property;
 import model.test;
-import view.GameView;
 import java.util.List;
 import view.SlotSquare;
 

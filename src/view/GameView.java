@@ -65,6 +65,7 @@ public class GameView extends javax.swing.JFrame {
         startGameBut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+                gameController.createBoard();
                 gameController.updateViewPlayers();
                 gamePlayer.startGame();
                 gameBoard.initPlayerChess();
@@ -115,13 +116,13 @@ public class GameView extends javax.swing.JFrame {
 			public void actionPerformed(ActionEvent e) {
                 gameController.rollDice();
                 diceNumber = gameController.getDiceNum();
+
                 if (diceNumber == 0) {
                     showGameMessage("ERROR in roll dice, please roll again");
                     rollDiceBut.setEnabled(true);
                     payRentBut.setEnabled(false);
                     buyBut.setEnabled(false);
                     nextPlayerBut.setEnabled(false);
-
                 }else if (diceNumber <= 6) {
                     dice1.getDiceFace((int) Math.round( diceNumber/2));
                     dice2.getDiceFace(diceNumber - (int) Math.round( diceNumber/2));
@@ -199,6 +200,8 @@ public class GameView extends javax.swing.JFrame {
     private void bBuyActionPerformed(java.awt.event.ActionEvent evt) {
         gameController.buyProperty();
     }
+
+
 
 
 }

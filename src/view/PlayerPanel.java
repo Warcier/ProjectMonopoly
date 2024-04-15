@@ -10,7 +10,6 @@ import java.util.stream.IntStream;
 
 import model.Property;
 import model.Player;
-import view.GameView;
 
 
 public class PlayerPanel extends JLayeredPane{
