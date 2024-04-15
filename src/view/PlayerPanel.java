@@ -81,6 +81,7 @@ public class PlayerPanel extends JLayeredPane{
             System.out.println("Error player panel : Invalid player number: " + playerNum);
             return;
         }
+
         this.playerProperties = currentPlayerProperty;
         JPanel currentPlayerPanel = playerPanels[playerNum-1];
         JScrollPane infoScrollPane = (JScrollPane) currentPlayerPanel.getComponent(1); // Assuming the JScrollPane is the second component

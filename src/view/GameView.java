@@ -65,6 +65,7 @@ public class GameView extends javax.swing.JFrame {
         startGameBut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+                gameController.createBoard();
                 gameController.updateViewPlayers();
                 gamePlayer.startGame();
                 gameBoard.initPlayerChess();
@@ -113,13 +114,13 @@ public class GameView extends javax.swing.JFrame {
 			public void actionPerformed(ActionEvent e) {
                 gameController.rollDice();
                 diceNumber = gameController.getDiceNum();
+
                 if (diceNumber == 0) {
                     showGameMessage("ERROR in roll dice, please roll again");
                     rollDiceBut.setEnabled(true);
                     payRentBut.setEnabled(false);
                     buyBut.setEnabled(false);
                     nextPlayerBut.setEnabled(false);
-
                 }else if (diceNumber <= 6) {
                     dice1.getDiceFace((int) Math.round( diceNumber/2));
                     dice2.getDiceFace(diceNumber - (int) Math.round( diceNumber/2));
@@ -194,28 +195,6 @@ public class GameView extends javax.swing.JFrame {
     }
 
 
-    public static void main(String args[]) {
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
-                 UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GameView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new GameView().setVisible(true);
-        
-            }
-        });
-    }
 
 
 }

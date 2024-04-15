@@ -3,6 +3,8 @@ package model;
 import controller.GameController;
 import model.list.CircularLinkedList;
 
+import java.util.List;
+
 public class GameModel {
     private Dice dice;
     private GameController gameController;
@@ -11,8 +13,8 @@ public class GameModel {
 
 
 
-    public GameModel() {
-        this.board = new CircularLinkedList(test.initPlayer(), test.initProperty());
+    public GameModel(List<Player> players, List<Property> properties) {
+        this.board = new CircularLinkedList(players, properties);
         this.turnController = new TurnController(test.initPlayer());
         this.dice = new Dice();
     }

@@ -23,6 +23,10 @@ public class GameController {
     public void rollDice() {
         // Implement roll dice logic here
         gameModel.rollDice();
+    }
+
+    public void moveCurrentPlayer() {
+        // Implement move player logic here
         gameModel.moveCurrentPlayer();
     }
 
@@ -46,10 +50,10 @@ public class GameController {
     public Player nextPlayer() {
         // Implement next player logic here
         gameModel.endTurn();
-
         //get next player;
         return gameModel.getCurrPlayer();
     }
+
     public List<Player> getPlayers() {
         // get player list from model
         // Returns an unmodifiable list to prevent modification from the view
@@ -60,6 +64,11 @@ public class GameController {
         // get slot details
         List<Player> players = getPlayers();
         gameView.updatePlayers(players);
+    }
+
+    public void createBoard(){
+        // create board
+        gameModel.getBoard().createBoard();
     }
 
     //TODO: get current round player information
