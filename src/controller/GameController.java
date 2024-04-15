@@ -61,6 +61,5 @@ public class GameController {
         List<Player> players = getPlayers();
         gameView.updatePlayers(players);
     }
-
     //TODO: get current round player information
 }

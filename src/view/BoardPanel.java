@@ -6,6 +6,7 @@ import javax.swing.border.*;
 
 import model.Property;
 import model.test;
+import view.GameView;
 import java.util.List;
 import view.SlotSquare;
 
@@ -133,8 +134,9 @@ public class BoardPanel extends javax.swing.JLayeredPane {
             System.out.println("Invalid square number.");
             return;
             // 
-        }else if (slotNum < SQUARE_COUNT) {
-            System.out.println("over 24");
+        }else if (slotNum > SQUARE_COUNT) {
+            slotNum -= 24;
+            GameView.showGameMessage("Player pass the GO PASS");
         }
     
         // Calculate new positions for the chess based on the player number to avoid overlap
