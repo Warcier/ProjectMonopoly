@@ -70,7 +70,7 @@ public class GameView extends javax.swing.JFrame {
                 gameBoard.initPlayerChess();
                 showGameMessage("The Game has started");
                 // update current player (player 1) info box
-                currentPlayer = players.get(currentPlayerNum);
+                currentPlayer = players.get(currentPlayerNum-1);
                 gamePlayer.updatePlayerInfoArea(currentPlayer.getCash(), currentPlayer.getPlayerProperty(), currentPlayerNum);
                 
                 startGameBut.setEnabled(false);
@@ -95,6 +95,8 @@ public class GameView extends javax.swing.JFrame {
                 nextPlayer = gameController.nextPlayer();
                 gameController.updateViewPlayers();
                 gamePlayer.changePlayerPanel(nextPlayer,gamePlayer.findPlayerIndexByName(nextPlayer.getName(), players));
+                // set current next Player
+                setCurrentPlayer(nextPlayer);
 
                 rollDiceBut.setEnabled(true);
                 payRentBut.setEnabled(false);
@@ -128,6 +130,7 @@ public class GameView extends javax.swing.JFrame {
                     dice2.getDiceFace(diceNumber-6);
                 }
                 showGameMessage("Roll Dice : "+ diceNumber);
+                gameBoard.updateChessLoc(gamePlayer.findPlayerIndexByName(currentPlayer.getName(), players),diceNumber );
                 
                 rollDiceBut.setEnabled(false);
                 payRentBut.setEnabled(true);
@@ -185,36 +188,16 @@ public class GameView extends javax.swing.JFrame {
         //displayProperties();
     }
 
+    public void setCurrentPlayer(Player player){
+        this.currentPlayer = player;    
+    }
+
     public void showPropertyInfo(String message){
         JOptionPane.showMessageDialog(this, message);
     }
 
     private void bBuyActionPerformed(java.awt.event.ActionEvent evt) {
         gameController.buyProperty();
-    }
-
-
-    public static void main(String args[]) {
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
-                 UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GameView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new GameView().setVisible(true);
-        
-            }
-        });
     }
 
 

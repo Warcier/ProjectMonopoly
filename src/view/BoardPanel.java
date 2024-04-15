@@ -136,7 +136,7 @@ public class BoardPanel extends javax.swing.JLayeredPane {
             // 
         }else if (slotNum > SQUARE_COUNT) {
             slotNum -= 24;
-            GameView.showGameMessage("Player pass the GO PASS");
+            //showGameMessage("Player pass the GO PASS");
         }
     
         // Calculate new positions for the chess based on the player number to avoid overlap
