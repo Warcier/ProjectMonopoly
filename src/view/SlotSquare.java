@@ -19,7 +19,7 @@ public class SlotSquare extends javax.swing.JLayeredPane{
     private JLabel priceLabel;
 
     private List<Property> properties = test.initProperty();
-    
+
     private ArrayList<String> slotNames = new ArrayList<>();
     private ArrayList<Integer> slotPrices = new ArrayList<>();
     private int slotPrice;
@@ -123,7 +123,7 @@ public class SlotSquare extends javax.swing.JLayeredPane{
     }
 
     private void initializeSlots(){
-        for (int i=0; i<properties.size();i++){
+        for (int i=0; i < properties.size();i++){
             Property slot = properties.get(i);
             slotNames.add(slot.getLandName());
             slotPrices.add(slot.getLandPrice());
