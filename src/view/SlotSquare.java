@@ -15,7 +15,6 @@ import javax.swing.border.LineBorder;
 public class SlotSquare extends javax.swing.JLayeredPane{
 
     GameController controller;
-    private JLayeredPane slotPanel;
     private JLabel nameLabel;
     private JLabel priceLabel;
 

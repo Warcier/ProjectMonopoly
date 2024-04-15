@@ -9,12 +9,13 @@ import model.Property;
 import model.Player;
 import java.util.List; 
 
+
 public class GameView extends javax.swing.JFrame {
 
     GameController gameController;
     private BoardPanel gameBoard;
     private PlayerPanel gamePlayer;
-    private JTextArea logText;
+    private static JTextArea logText;
     private JScrollPane gameLog;
     private JButton startGameBut;
     private JButton nextPlayerBut;
@@ -43,7 +44,7 @@ public class GameView extends javax.swing.JFrame {
         setGameController(new GameController());
         
         // Board
-        gameBoard = new BoardPanel(10,20);
+        gameBoard = new BoardPanel(20,20);
         gameBoard.setBackground(new Color(51, 255, 153));
         getContentPane().add(gameBoard);
         // Player Section
@@ -65,12 +66,14 @@ public class GameView extends javax.swing.JFrame {
         startGameBut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+                rollDiceBut.setEnabled(true);
                 gameController.updateViewPlayers();
                 gamePlayer.startGame();
                 gameBoard.initPlayerChess();
                 showGameMessage("The Game has started");
                 // update current player (player 1) info box
-                currentPlayer = players.get(currentPlayerNum);
+                currentPlayer = players.get(currentPlayerNum-1);
+                showGameMessage(currentPlayer.getName()+" Turn");
                 gamePlayer.updatePlayerInfoArea(currentPlayer.getCash(), currentPlayer.getPlayerProperty(), currentPlayerNum);
                 
                 startGameBut.setEnabled(false);
@@ -95,12 +98,16 @@ public class GameView extends javax.swing.JFrame {
                 nextPlayer = gameController.nextPlayer();
                 gameController.updateViewPlayers();
                 gamePlayer.changePlayerPanel(nextPlayer,gamePlayer.findPlayerIndexByName(nextPlayer.getName(), players));
+                // set to next player
+                setCurrentPlayer(nextPlayer);
 
                 rollDiceBut.setEnabled(true);
                 payRentBut.setEnabled(false);
                 buyBut.setEnabled(false);
                 nextPlayerBut.setEnabled(false);
             }});
+            //set next player button disable in the beginning
+        nextPlayerBut.setEnabled(false);   
 
         // Roll dice Button        
         rollDiceBut = new JButton("Roll Dice");
@@ -127,19 +134,23 @@ public class GameView extends javax.swing.JFrame {
                     dice1.getDiceFace(6);
                     dice2.getDiceFace(diceNumber-6);
                 }
-                showGameMessage("Roll Dice : "+ diceNumber);
+                showGameMessage(currentPlayer.getName()+" rolled dice : "+ diceNumber);
+                gameBoard.updateChessLoc(gamePlayer.findPlayerIndexByName(currentPlayer.getName(), players), diceNumber);
                 
                 rollDiceBut.setEnabled(false);
                 payRentBut.setEnabled(true);
                 buyBut.setEnabled(true);
                 nextPlayerBut.setEnabled(true);
             }});
+            //set Roll Dice button disable in the beginning
+        rollDiceBut.setEnabled(false);
 
         // Pay rent Button    
         payRentBut = new JButton("Pay Rent");
         payRentBut.setFont(new Font("Arial", Font.PLAIN, 14));
             // todo Pay rent function
         payRentBut.setBounds(1170,600,170,35);
+        
         // Buy slot Button
         buyBut = new JButton("Buy");
         buyBut.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -153,6 +164,8 @@ public class GameView extends javax.swing.JFrame {
                 buyBut.setEnabled(false);
                 nextPlayerBut.setEnabled(true);
             }});
+            //set buy button disable in the beginning
+        buyBut.setEnabled(false);
 
         // Dice 1
         dice1 = new DicePanel(300,350,40,40);
@@ -174,9 +187,13 @@ public class GameView extends javax.swing.JFrame {
         
     }
 
-    public void showGameMessage(String log){
+    public static void showGameMessage(String log){
         // show message in game log
         logText.append("> "+log+"\n");
+    }
+
+    public void setCurrentPlayer(Player player){
+        this.currentPlayer = player;
     }
 
     public void updatePlayers(List<Player> players) {
@@ -185,6 +202,13 @@ public class GameView extends javax.swing.JFrame {
         //displayProperties();
     }
 
+    public void updateProperties(List<Property> properties) {
+        // update properties on the board
+        this.properties = properties;
+        //displayProperties();
+    }
+
+
     public void showPropertyInfo(String message){
         JOptionPane.showMessageDialog(this, message);
     }
@@ -192,30 +216,5 @@ public class GameView extends javax.swing.JFrame {
     private void bBuyActionPerformed(java.awt.event.ActionEvent evt) {
         gameController.buyProperty();
     }
-
-
-    public static void main(String args[]) {
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
-                 UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GameView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new GameView().setVisible(true);
-        
-            }
-        });
-    }
-
 
 }
