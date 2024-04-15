@@ -10,7 +10,6 @@ import java.util.stream.IntStream;
 
 import model.Property;
 import model.Player;
-import view.GameView;
 
 
 public class PlayerPanel extends JLayeredPane{
@@ -117,7 +116,6 @@ public class PlayerPanel extends JLayeredPane{
     public void changePlayerPanel(Player changePlayer,int playerNum){
         card.show(this, ""+(playerNum+1));
         updatePlayerInfoArea(changePlayer.getCash(), changePlayer.getPlayerProperty(), playerNum+1);
-        GameView.showGameMessage("Change to "+changePlayer.getName()+" trun.");
     }
 
     public void startGame(){

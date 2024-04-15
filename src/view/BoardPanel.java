@@ -26,7 +26,6 @@ public class BoardPanel extends javax.swing.JLayeredPane {
     SlotSquare[] squares = new SlotSquare[SQUARE_COUNT];
     private int[] squareXCoord = new int[SQUARE_COUNT];
     private int[] squareYCoord = new int[SQUARE_COUNT];
-    private int[] playerLocation = {0,0,0,0};
     private int[] rotationAngles = {135,180,180,180,180,180,-135,
                                         -90,-90,-90,-90,-90,-45,
                                         0,0,0,0,0,45,
@@ -129,12 +128,9 @@ public class BoardPanel extends javax.swing.JLayeredPane {
             System.out.println("Invalid player number.");
             return;
         }
-        if (slotNum < 0 ) {
+        if (slotNum < 0 || slotNum >= SQUARE_COUNT) {
             System.out.println("Invalid square number.");
             return;
-            // 
-        }else if (slotNum < SQUARE_COUNT) {
-            System.out.println("over 24");
         }
     
         // Calculate new positions for the chess based on the player number to avoid overlap
@@ -146,18 +142,8 @@ public class BoardPanel extends javax.swing.JLayeredPane {
     }
 
     //TODO: Update player chess location
-    public void updateChessLoc(int playerNum, int diceNum ){
-        int currentPlayerLoca = playerLocation[playerNum];
-        if (playerNum < 0 || playerNum >= playerChess.length) {
-            System.out.println("Invalid player number.");
-            return;
-        }
-        if (diceNum < 0 || diceNum > 13) {
-            System.out.println("Invalid dice number.");
-            return;
-        }
-        currentPlayerLoca+=diceNum;
-        movePlayerChess(playerNum, currentPlayerLoca);
-        playerLocation[playerNum] = currentPlayerLoca;
-    }  
+    /**public updateChessLoc(int playerNum, int slotNum){
+        movePlayerChess(int playerNum, int slotNum);
+
+    }*/
 }
