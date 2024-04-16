@@ -42,9 +42,9 @@ public class GameController {
     }
 
     // Call every turn to check if a player has won
-    public void checkWinCondition() {
+    public boolean checkWinCondition() {
         // Implement check win condition logic here
-        gameModel.checkWinCondition();
+        return gameModel.checkWinCondition();
 
     }
 
@@ -85,9 +85,17 @@ public class GameController {
         } 
         return playersNode;
     }
-
+    public Player getCurrentPlayerToView(){
+        return gameModel.getCurrPlayer();
+    }
+    
     public void addGameMessageToLog(String message){
         // add game log to View( TextArea logText )
         gameView.showGameMessage(message);
+    }
+
+    public void addPlayerActionTakenToView(Player player, String action){
+        // add action message that taken by program auto
+        gameView.addPlayerTakenAction(player, action);
     }
 }

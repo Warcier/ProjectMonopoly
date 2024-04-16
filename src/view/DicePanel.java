@@ -17,6 +17,7 @@ public class DicePanel extends javax.swing.JPanel {
     private int faceValue = 1;
     
     public DicePanel(int xCoord, int yCoord, int width, int height) {
+        // create dice panel
         setBorder(new LineBorder(new Color(0, 0, 0)));
 	    setBounds(xCoord, yCoord, width, height);
         setOpaque(true);
@@ -24,6 +25,7 @@ public class DicePanel extends javax.swing.JPanel {
     
     // draw dice
     public void paintComponent(Graphics g) {
+        // draw dice logic
         super.paintComponent(g);
         g.setColor(Color.BLACK);
         
@@ -59,6 +61,7 @@ public class DicePanel extends javax.swing.JPanel {
     }
 
     public void getDiceFace(int faceValue){
+        // draw dice
         this.faceValue = faceValue;
         repaint();
     }

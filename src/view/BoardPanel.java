@@ -4,9 +4,8 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import model.Property;
-import model.test;
 import model.list.Node;
+import model.*;
 
 import java.util.List;
 import view.SlotSquare;
@@ -35,6 +34,7 @@ public class BoardPanel extends javax.swing.JLayeredPane {
     
     
     public BoardPanel(int xCoord, int yCoord) {
+        // create monoploy game board
         setBorder(new LineBorder(new Color(0, 0, 0)));
 		setBounds(xCoord, yCoord, PANEL_WIDTH, PANEL_HEIGHT);
         setOpaque(true);
@@ -51,6 +51,7 @@ public class BoardPanel extends javax.swing.JLayeredPane {
 
 
     private void initializeSquares() {
+        // creating slots on the game board
         for (int slotNum = 0; slotNum < SQUARE_COUNT; slotNum++) {
             int xCoordSquare = 0, yCoordSquare = 0;
 
@@ -78,11 +79,12 @@ public class BoardPanel extends javax.swing.JLayeredPane {
             squareYCoord[slotNum] = yCoordSquare;
 
             squares[slotNum] = new SlotSquare(xCoordSquare, yCoordSquare, squareWidth, squareHeight, slotNum, rotationAngles[slotNum]);
-            this.add(squares[slotNum]);
+            this.add(squares[slotNum],PALETTE_LAYER);
         }
     }
 
     private void initializeMonoLabel(int xCoordLabel, int yCoordLabel){
+        // create monoploy label on the middle of the board
         JLabel lblMonopoly = new JLabel("MONOPOLY"){
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g;
@@ -100,7 +102,8 @@ public class BoardPanel extends javax.swing.JLayeredPane {
 
     }
 
-    public JLabel createPlayerChess(int xCoordChess, int yCoordChess,int playerNum, Color color) {    
+    public JLabel createPlayerChess(int xCoordChess, int yCoordChess,int playerNum, Color color) {
+        // function to create player on the game board    
 		JLabel playerChess = new JLabel(""+playerNum);
         playerChess.setBorder(new LineBorder(new Color(0,0,0)));
 		playerChess.setFont(new Font("Arial", Font.BOLD, 15));
@@ -113,6 +116,7 @@ public class BoardPanel extends javax.swing.JLayeredPane {
 	}
 
     public void initPlayerChess(){     
+        // create player on game board
         playerChess[0] = createPlayerChess(squareXCoord[0]+10,squareYCoord[0]+5,1, Color.RED);
         playerChess[1] = createPlayerChess(squareXCoord[0]+10,squareYCoord[0]+25,2, Color.BLUE);
         playerChess[2] = createPlayerChess(squareXCoord[0]+10,squareYCoord[0]+45,3, new Color(0,102,0));
@@ -122,21 +126,39 @@ public class BoardPanel extends javax.swing.JLayeredPane {
         this.add(playerChess[1],JLayeredPane.MODAL_LAYER);
         this.add(playerChess[2],JLayeredPane.MODAL_LAYER);
         this.add(playerChess[3],JLayeredPane.MODAL_LAYER);
+        GameView.showGameMessage("Add Player to the monoploy board.");
     }
 
-    private void movePlayerChess(int playerNum, int slotNum) {
-        // Moving Player Chess location
-        if (playerNum < 0 || playerNum >= playerChess.length) {
-            System.out.println("Invalid player number.");
+    public void movePlayerChess(Player player, List<Node> playersNodes) {
+        // Move player chess Position
+        if (playersNodes == null) {
+            System.out.println(" Error Player Node not found.");
             return;
         }
+        int playerNum = 0;
+        if ("Player 1".equals(player.getName())) {
+            playerNum = 0;
+        }else if ("Player 2".equals(player.getName())) {
+            playerNum = 1;
+        }else if ("Player 3".equals(player.getName())) {
+            playerNum = 2;
+        }else if ("Player 4".equals(player.getName())) {
+            playerNum = 3;
+        }else{
+            System.out.println("Invaild Player");
+        }
+        Node playerNode = playersNodes.get(playerNum);
+        if (playerNode == null) {
+            System.out.println("Player not found");
+        }
+        // get players node slot num [player location]
+        int slotNum  = playerNode.getSlot();
         if (slotNum < 0 ) {
-            System.out.println("Invalid square number.");
+            System.out.println("Invalid square number .");
             return;
             // 
         }else if (slotNum > SQUARE_COUNT) {
-            slotNum -= 24;
-            GameView.showGameMessage("Player pass the GO PASS");
+            GameView.showGameMessage("Player pass the GO PASS, get 200 cash");
         }
     
         // Calculate new positions for the chess based on the player number to avoid overlap
@@ -147,19 +169,4 @@ public class BoardPanel extends javax.swing.JLayeredPane {
         playerChess[playerNum].setBounds(squareXCoord[slotNum] + xOffset, squareYCoord[slotNum] + yOffset, 20, 20);
     }
 
-    public void updateChessPos(List<Node> playersNodes){
-        //Update all player chess Position
-        for(int playerNum = 0; playerNum<playersNodes.size();playerNum++){
-            // loop though all node in the playersNode list
-            Node playerNode = playersNodes.get(playerNum);
-            if (playerNode == null) {
-                continue;
-            }
-            // get players node slot num [player location]
-            int playerLocation  = playerNode.getSlot();
-            movePlayerChess(playerNum, playerLocation);
-        }
-        
-
-    }  
 }

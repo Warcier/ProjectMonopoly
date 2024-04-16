@@ -209,4 +209,22 @@ public class CircularLinkedList {
     public boolean checkWinCondition() {
         return players.size() == 1;
     }
+
+    public Node getNode(int num) {  
+        // find Node
+        if (head == null || num < 0) {
+            return null; 
+        }  
+        Node current = head;
+        int count = 0;
+        do {
+            if (count == num) {
+                return current; 
+            }
+            current = current.next; 
+            count++;
+        } while (current != head); 
+    
+        return null; 
+    }
 }

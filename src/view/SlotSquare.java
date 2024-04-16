@@ -3,6 +3,7 @@ package view;
 import controller.*;
 import model.Property;
 import model.test;
+import model.list.*;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import javax.swing.border.LineBorder;
+
 
 public class SlotSquare extends javax.swing.JLayeredPane{
 
@@ -21,16 +23,17 @@ public class SlotSquare extends javax.swing.JLayeredPane{
 
     private List<Property> properties = test.initProperty();
 
+    private CircularLinkedList board;
     private ArrayList<String> slotNames = new ArrayList<>();
     private ArrayList<Integer> slotPrices = new ArrayList<>();
     private int slotPrice;
     private String slotName;
-    private double rent;
     private int slotNum;
     /**
      * Creates new form Square
      */
     public SlotSquare(int xCoord, int yCoord, int width, int height,int slotNum, int rotationDegrees ) {
+        // sqaure to show the slot
         setBorder(new LineBorder(new Color(0,0,0)));
         setBounds(xCoord,yCoord,width,height);
         setOpaque(true);
@@ -53,22 +56,21 @@ public class SlotSquare extends javax.swing.JLayeredPane{
         try {
             this.slotName = slotNames.get(slotNum);
             this.slotPrice = slotPrices.get(slotNum);
-            this.rent =  Math.ceil(slotPrice*0.1 * 100)/100;
             
         } catch (NumberFormatException e) {
             System.out.println(slotNum+" is empty");
         }
         
-        if(rotationDegrees == 135 || rotationDegrees == -135 || rotationDegrees == -45 || rotationDegrees == 45) {
+        if(rotationDegrees == 135 ) {
             nameLabel = setupLabel(slotName,rotationDegrees);
-            nameLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+            nameLabel.setFont(new Font("Lucida Grande", Font.BOLD, 13));
             nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
             nameLabel.setBounds(0,0,this.getWidth(),this.getHeight());
             this.add(nameLabel);
 	} else {	
 						
 		nameLabel = setupLabel(slotName,rotationDegrees);
-                priceLabel = setupLabel(String.valueOf(slotPrice),rotationDegrees);
+        priceLabel = setupLabel(String.valueOf(slotPrice),rotationDegrees);
 
 		
 		if(rotationDegrees == 90) {
@@ -87,8 +89,21 @@ public class SlotSquare extends javax.swing.JLayeredPane{
                     nameLabel.setBounds(0, -10, this.getWidth(), this.getHeight());
                     priceLabel.setBounds(0, 10, this.getWidth(), this.getHeight());
 		}
-		nameLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
-                priceLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+        if(rotationDegrees == -135) {
+            nameLabel.setBounds(-10,10,this.getWidth(),this.getHeight());
+            priceLabel.setBounds(10, -10, this.getWidth(), this.getHeight());
+        }
+        if(rotationDegrees == -45) {
+            nameLabel.setBounds(-10,-10,this.getWidth(),this.getHeight());
+            priceLabel.setBounds(10, 10, this.getWidth(), this.getHeight());
+        }
+        if(rotationDegrees == 45) {
+            nameLabel.setBounds(0,-5,this.getWidth(),this.getHeight());
+            priceLabel.setBounds(-20, 10, this.getWidth(), this.getHeight());
+        }
+
+		nameLabel.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+                priceLabel.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 priceLabel.setHorizontalAlignment(SwingConstants.CENTER);
 			
@@ -100,6 +115,7 @@ public class SlotSquare extends javax.swing.JLayeredPane{
 
 
     private JLabel setupLabel(String text, int rotationDegrees) {
+        // set the label to display the slot name and price in the slot panel
         JLabel label = new JLabel(text) {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g;
@@ -124,14 +140,25 @@ public class SlotSquare extends javax.swing.JLayeredPane{
     }
 
     private void initializeSlots(){
+        // Create slots in board
         for (int i=0; i < properties.size();i++){
             Property slot = properties.get(i);
             slotNames.add(slot.getLandName());
             slotPrices.add(slot.getLandPrice());
         }
     }
+    public void setBoard(CircularLinkedList board){
+        // set board
+        this.board = controller.getBoard();
+    }
 
     private void displayDetails(){
+        // Dialog for display slot information
+        CircularLinkedList board = GameView.getboardList();
+        Node slot = null;
+        if (board != null) {
+            slot = board.getNode(slotNum);
+        }
         JDialog detailDialog = new JDialog();
         detailDialog.setTitle("Slot "+ slotNum+ " Details");
         detailDialog.setSize(300, 200);
@@ -155,16 +182,20 @@ public class SlotSquare extends javax.swing.JLayeredPane{
         detailSlotPrice.setFont(new Font("Arial", Font.BOLD, 14));
         detailSlotPrice.setForeground(Color.WHITE);
 
-        JLabel detailSlotRent = new JLabel("Rent Price: "+String.valueOf(rent));
+        JLabel detailSlotRent = new JLabel("Rent Price: "+String.valueOf(Math.ceil(slotPrice*0.1 * 100)/100));
         detailSlotRent.setAlignmentX(Component.CENTER_ALIGNMENT);
         detailSlotRent.setFont(new Font("Arial", Font.BOLD, 14));
         detailSlotRent.setForeground(Color.WHITE);
 
-        // get slot owner ??
-        JLabel detailSlotOwner = new JLabel("Owner: NA");
+        
+        JLabel detailSlotOwner = new JLabel("");
         detailSlotOwner.setAlignmentX(Component.CENTER_ALIGNMENT);
         detailSlotOwner.setFont(new Font("Arial", Font.BOLD, 14));
         detailSlotOwner.setForeground(Color.WHITE);
+        if (slot == null||slot.getOwner() == null) {
+            detailSlotOwner.setText("Ower: NA");
+        }else{
+            detailSlotOwner.setText("Ower:" + slot.getOwner());}
 
          // Pushes all items to the center
         dialogPanel.add(Box.createVerticalGlue());
@@ -181,4 +212,5 @@ public class SlotSquare extends javax.swing.JLayeredPane{
         detailDialog.setVisible(true);
 
     }
+
 }

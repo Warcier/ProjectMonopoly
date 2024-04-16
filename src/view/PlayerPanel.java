@@ -3,12 +3,16 @@ package view;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+
+import controller.GameController;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 
 import model.Property;
 import model.Player;
+import model.list.*;
 
 
 public class PlayerPanel extends JLayeredPane{
@@ -19,15 +23,15 @@ public class PlayerPanel extends JLayeredPane{
      * @return
      */
     CardLayout card = new CardLayout(); 
-    private JPanel[] playerPanels = new JPanel[4];
+    private static JPanel[] playerPanels = new JPanel[4];
     private final int PANEL_WIDTH;
     private final int PANEL_HEIGHT;
     private JPanel beforeStartPanel;
-    private List<Property> playerProperties;
-    private List<Player> players;
+    private CircularLinkedList board;
     
 
     public PlayerPanel(int xCoord, int yCoord, int width, int height){
+        // player panel for display player information
         setBorder(new LineBorder(new Color(0, 0, 0)));
 		setBounds(xCoord, yCoord, width, height);
         this.PANEL_WIDTH = width;
@@ -64,10 +68,28 @@ public class PlayerPanel extends JLayeredPane{
 
         // Create and configure the text area
         JTextArea playerInfoArea = new JTextArea();
-        playerInfoArea.setBounds(10, 34, panelWidth-20, panelHeight-50);
+        playerInfoArea.setBounds(10, 34, panelWidth-20, panelHeight-100);
         JScrollPane infoScrollPane = new JScrollPane(playerInfoArea);
-        infoScrollPane.setBounds(10, 34, panelWidth - 20, panelHeight - 50);
+        infoScrollPane.setBounds(10, 34, panelWidth - 20, panelHeight - 80);
         playerPanel.add(infoScrollPane, BorderLayout.CENTER);
+
+        // Create and configure the player action label
+        JLabel actionLabel = new JLabel("Player Action :");
+        actionLabel.setForeground(Color.WHITE);
+        actionLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        actionLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        actionLabel.setVerticalAlignment(SwingConstants.CENTER); 
+        actionLabel.setBounds(10, panelHeight-45, panelWidth/3, 40);
+        playerPanel.add(actionLabel);
+
+        // Create and configure the title label
+        JLabel playerTakeActionJLabel = new JLabel();
+        playerTakeActionJLabel.setForeground(Color.WHITE);
+        playerTakeActionJLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        playerTakeActionJLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        playerTakeActionJLabel.setVerticalAlignment(SwingConstants.CENTER); 
+        playerTakeActionJLabel.setBounds(20, panelHeight-45, panelWidth - panelWidth/3, 40);
+        playerPanel.add(playerTakeActionJLabel);
 
         // Add the panel to the card layout with a unique identifier
         this.add(playerPanel, String.valueOf(playerNum));
@@ -75,24 +97,35 @@ public class PlayerPanel extends JLayeredPane{
         return playerPanel;
     }
 
-    public void updatePlayerInfoArea(int cash, List<Property> currentPlayerProperty, int playerNum){
-        if (playerNum < 1 || playerNum > playerPanels.length) {
-            System.out.println("Error player panel : Invalid player number: " + playerNum);
+    public void updatePlayerInfoArea(Player player){
+        // update the player information in the player panel area
+        if (player == null) {
+            System.out.println("Error player panel (Invalid player) : " + player.getName());
             return;
         }
-
-        this.playerProperties = currentPlayerProperty;
-        JPanel currentPlayerPanel = playerPanels[playerNum-1];
+        this.board = GameView.getboardList();
+        int playerNum = 0;
+        if ("Player 1".equals(player.getName())) {
+            playerNum = 0;
+        }else if ("Player 2".equals(player.getName())) {
+            playerNum = 1;
+        }else if ("Player 3".equals(player.getName())) {
+            playerNum = 2;
+        }else if ("Player 4".equals(player.getName())) {
+            playerNum = 3;
+        }
+        JPanel currentPlayerPanel = playerPanels[playerNum];
         JScrollPane infoScrollPane = (JScrollPane) currentPlayerPanel.getComponent(1); // Assuming the JScrollPane is the second component
         JTextArea playerInfoArea = (JTextArea) infoScrollPane.getViewport().getView();
         // Display player current cash
-        playerInfoArea.setText("Current Cash: "+cash+"\n");
+        playerInfoArea.setText("Current Cash: "+player.getCash()+"\n");
+        // Display player current position
+        //playerInfoArea.append("Position: "+ board.findPlayerNode(player).getSlot()+"\n");
         // Display player current Property
-
-        playerInfoArea.append("Own Property: "+propertiesToString()+"\n");
+        playerInfoArea.append("Own Property: "+propertiesToString(player.getPlayerProperty())+"\n");
     }
 
-    private String propertiesToString() {
+    private String propertiesToString(List<Property> playerProperties) {
         // convert list of properties to string
         if (playerProperties == null) {
             return "";
@@ -104,9 +137,20 @@ public class PlayerPanel extends JLayeredPane{
     }
 
 
-    public void changePlayerPanel(Player changePlayer,int playerNum){
-        card.show(this, ""+(playerNum+1));
-        updatePlayerInfoArea(changePlayer.getCash(), changePlayer.getPlayerProperty(), playerNum+1);
+    public void changePlayerPanel(Player changePlayer){
+        // change player information panel logic
+        int playerNum = 0;
+        if (changePlayer.getName() == "Player 1") {
+            playerNum = 1;
+        }else if (changePlayer.getName() == "Player 2") {
+            playerNum = 2;
+        }else if (changePlayer.getName() == "Player 3") {
+            playerNum = 3;
+        }else if (changePlayer.getName() == "Player 4") {
+            playerNum = 4;
+        }
+        card.show(this, ""+(playerNum));
+        updatePlayerInfoArea(changePlayer);
         GameView.showGameMessage("Change to "+changePlayer.getName()+" trun.");
     }
 
@@ -117,8 +161,25 @@ public class PlayerPanel extends JLayeredPane{
         playerPanels[1] = createPlayerPanel(PANEL_WIDTH, PANEL_HEIGHT,"Player 2", Color.BLUE, 2);
         playerPanels[2] = createPlayerPanel(PANEL_WIDTH, PANEL_HEIGHT,"Player 3", new Color(0,102,0), 3);
         playerPanels[3] = createPlayerPanel(PANEL_WIDTH, PANEL_HEIGHT,"Player 4", new Color(255,102,0), 4);
+        GameView.showGameMessage("Created 4 players");
         card.show(this, ""+1);
 
     }
+    public static void setPlayerActionLabel(Player player, String action){
+        int playerNum = 0;
+        if (player.getName() == "Player 1") {
+            playerNum = 1;
+        }else if (player.getName() == "Player 2") {
+            playerNum = 2;
+        }else if (player.getName() == "Player 3") {
+            playerNum = 3;
+        }else if (player.getName() == "Player 4") {
+            playerNum = 4;
+        }
+        JPanel currentPlayerPanel = playerPanels[playerNum-1];
+        JLabel playerTakeAction = (JLabel) currentPlayerPanel.getComponent(3);
+        playerTakeAction.setText(action);
 
+
+    }
 }

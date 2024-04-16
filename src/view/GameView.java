@@ -14,10 +14,10 @@ import model.list.*;
 
 
 public class GameView extends javax.swing.JFrame {
-
+    
     GameController gameController;
     private BoardPanel gameBoard;
-    private PlayerPanel gamePlayer;
+    private static PlayerPanel gamePlayer;
     private static JTextArea logText;
     private JScrollPane gameLog;
     private JButton startGameBut;
@@ -27,14 +27,14 @@ public class GameView extends javax.swing.JFrame {
     private DicePanel dice1;
     private DicePanel dice2;
 
-    private CircularLinkedList board;
+    private static CircularLinkedList board;
     private List<Property> properties;
     private List<Player> players;
     private List<Node> playersNode;
     private int diceNumber;
-    private int currentPlayerNum = 1;
     private Player currentPlayer;
     private Player nextPlayer;
+    private boolean winCondition = false;
     
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
@@ -67,22 +67,24 @@ public class GameView extends javax.swing.JFrame {
         startGameBut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+                // Start Game Logic
                 gameController.createBoard();
                 gameController.updateViewBoard();
                 gamePlayer.startGame();
                 gameBoard.initPlayerChess();
+                currentPlayer = gameController.getCurrentPlayerToView();
+
                 showGameMessage("The Game has started");
                 // update current player (player 1) info box
-                currentPlayer = players.get(currentPlayerNum-1);
-                gamePlayer.updatePlayerInfoArea(currentPlayer.getCash(), currentPlayer.getPlayerProperty(), currentPlayerNum);
+                gamePlayer.updatePlayerInfoArea(currentPlayer);
                 
                 startGameBut.setEnabled(false);
-                //buyBut.setEnabled(false);
+                rollDiceBut.setEnabled(true);
                 nextPlayerBut.setEnabled(false);
             }});
 
         startGameBut.setFont(new Font("Arial", Font.PLAIN, 14));
-        startGameBut.setBounds(1060,310,170,35);
+        startGameBut.setBounds(1060,310,200,35);
         
         // Next Round Button          
         nextPlayerBut = new JButton("Next Player");
@@ -93,17 +95,21 @@ public class GameView extends javax.swing.JFrame {
         nextPlayerBut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-                gameController.checkWinCondition();
+                // set next player to model
                 nextPlayer = gameController.nextPlayer();
+                // update board to latest
                 gameController.updateViewBoard();
-                gamePlayer.changePlayerPanel(nextPlayer,findPlayerIndexByName(nextPlayer.getName(), players));
-                // set current next Player
+                // change player panel
+                gamePlayer.changePlayerPanel(nextPlayer);
+                // set player for next round
                 setCurrentPlayer(nextPlayer);
 
                 rollDiceBut.setEnabled(true);
                 //buyBut.setEnabled(false);
                 nextPlayerBut.setEnabled(false);
             }});
+
+            nextPlayerBut.setEnabled(false);
 
         // Roll dice Button        
         rollDiceBut = new JButton("Roll Dice");
@@ -114,6 +120,7 @@ public class GameView extends javax.swing.JFrame {
         rollDiceBut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+                // roll dice button logic
                 gameController.rollDice();
                 gameController.moveCurrentPlayer();
                 // set players node
@@ -135,13 +142,22 @@ public class GameView extends javax.swing.JFrame {
                 showGameMessage("Roll Dice : "+ diceNumber);
                 board.ShowAllPlayerPostion();
                 // update chess position with the updated node list
-                gameBoard.updateChessPos(playersNode);
+                gameBoard.movePlayerChess(currentPlayer,playersNode);
+                // check if the game over
+                gameController.checkWinCondition();
                 
                 rollDiceBut.setEnabled(false);
                 //buyBut.setEnabled(true);
                 nextPlayerBut.setEnabled(true);
-                gameController.updateViewBoard();
+                // check if any one win
+                checkWinCondition();
+                //update the board if no one win
+                if (!winCondition) {
+                    gameController.updateViewBoard();    
+                }                
             }});
+
+            rollDiceBut.setEnabled(false);
         // Buy slot Button
         /**buyBut = new JButton("Buy");
         buyBut.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -155,9 +171,9 @@ public class GameView extends javax.swing.JFrame {
             }});*/
 
         // Dice 1
-        dice1 = new DicePanel(300,350,40,40);
+        dice1 = new DicePanel(320,350,50,50);
         //Dice 2
-        dice2 = new DicePanel(500,350,40,40);
+        dice2 = new DicePanel(520,350,50,50);
         
         // add to main frame
         getContentPane().add(gameLog);
@@ -178,6 +194,12 @@ public class GameView extends javax.swing.JFrame {
         logText.append("> "+log+"\n");
     }
 
+    public static void addPlayerTakenAction(Player player, String action){
+        // show player action that have taken by program
+        gamePlayer.setPlayerActionLabel(player, action);
+
+    }
+
     public void updateBoard(CircularLinkedList board) {
         // update board on the view
         this.board = board;
@@ -188,29 +210,58 @@ public class GameView extends javax.swing.JFrame {
     }
 
     public void setCurrentPlayer(Player player){
+        // update the current player of the round
         this.currentPlayer = player;    
     }
 
     public void setPlayersNode(){
+        // update the player node list to get least player location
         List<Node> playersNode = gameController.getPlayersNode();
         this.playersNode = playersNode;
         
     }
 
-    // find player index with player name
-    public int findPlayerIndexByName(String playerName,List<Player> players) {
-        OptionalInt indexOpt = IntStream.range(0, players.size())
-                                        .filter(i -> playerName.equals(players.get(i).getName()))
-                                        .findFirst();
+    public static CircularLinkedList getboardList(){
+        // transfer board to other Panel
+        if (board == null) {
+            return null;
+        }
+        return board;
+   }
 
-        return indexOpt.orElse(-1);
-    }
+   private void checkWinCondition(){
+        if (gameController.checkWinCondition()) {
+            winCondition = true;
+            nextPlayerBut.setEnabled(false);
 
-    private void bBuyActionPerformed(java.awt.event.ActionEvent evt) {
-        gameController.buyProperty();
-    }
+            JDialog gameOverDialog = new JDialog();
+            gameOverDialog.setTitle("Game Over !!!");
+            gameOverDialog.setSize(500, 400);
+            gameOverDialog.setLocationRelativeTo(null);
+            gameOverDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            gameOverDialog.setLayout(new BorderLayout());
 
+            JPanel gameOverPanel = new JPanel();
+            gameOverPanel.setLayout(new BoxLayout(gameOverPanel, BoxLayout.Y_AXIS));
+            gameOverPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            gameOverPanel.setBackground(new Color(102,102,102));
+    
+            JLabel gameOverLabel = new JLabel("Game Over !!!");
+            gameOverLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            gameOverLabel.setFont(new Font("Arial", Font.BOLD, 18));
+            gameOverLabel.setForeground(Color.WHITE);
+    
+            JLabel winPlayerJLabel = new JLabel(currentPlayer.getName()+" has win the game");    
+            winPlayerJLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            winPlayerJLabel.setFont(new Font("Arial", Font.BOLD, 18));
+            winPlayerJLabel.setForeground(Color.WHITE);
 
-
-
+            // Pushes all items to the center
+            gameOverPanel.add(gameOverLabel);
+            gameOverPanel.add(winPlayerJLabel);
+            gameOverDialog.add(gameOverPanel, BorderLayout.CENTER);
+            gameOverDialog.setVisible(true);
+        
+        }
+   }
 }
