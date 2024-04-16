@@ -3,31 +3,35 @@ package view;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.util.List; 
+import java.util.OptionalInt;
+import java.util.stream.IntStream;
 
 import controller.GameController;
 import model.Property;
 import model.Player;
-import java.util.List; 
+import model.list.*;
+
 
 public class GameView extends javax.swing.JFrame {
 
     GameController gameController;
     private BoardPanel gameBoard;
     private PlayerPanel gamePlayer;
-    private JTextArea logText;
+    private static JTextArea logText;
     private JScrollPane gameLog;
     private JButton startGameBut;
     private JButton nextPlayerBut;
     private JButton rollDiceBut;
-    private JButton payRentBut;
-    private JButton buyBut;
+    //private JButton buyBut;
     private DicePanel dice1;
     private DicePanel dice2;
 
-    private int diceNumber;
+    private CircularLinkedList board;
     private List<Property> properties;
-    //private List<Property> currentPlayherProperties;
     private List<Player> players;
+    private List<Node> playersNode;
+    private int diceNumber;
     private int currentPlayerNum = 1;
     private Player currentPlayer;
     private Player nextPlayer;
@@ -54,9 +58,7 @@ public class GameView extends javax.swing.JFrame {
         logText = new JTextArea();
 	    logText.setFont(new Font("Arial", Font.PLAIN, 12));
         gameLog = new JScrollPane(logText);
-
-        // manual adjest gamelog coordinate (todo automate)
-        gameLog.setBounds(950,350,400,200);
+        gameLog.setBounds(950,370,400,200);
         gameLog.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         
         // Start Game Button
@@ -66,7 +68,7 @@ public class GameView extends javax.swing.JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
                 gameController.createBoard();
-                gameController.updateViewPlayers();
+                gameController.updateViewBoard();
                 gamePlayer.startGame();
                 gameBoard.initPlayerChess();
                 showGameMessage("The Game has started");
@@ -75,8 +77,7 @@ public class GameView extends javax.swing.JFrame {
                 gamePlayer.updatePlayerInfoArea(currentPlayer.getCash(), currentPlayer.getPlayerProperty(), currentPlayerNum);
                 
                 startGameBut.setEnabled(false);
-                payRentBut.setEnabled(false);
-                buyBut.setEnabled(false);
+                //buyBut.setEnabled(false);
                 nextPlayerBut.setEnabled(false);
             }});
 
@@ -86,7 +87,7 @@ public class GameView extends javax.swing.JFrame {
         // Next Round Button          
         nextPlayerBut = new JButton("Next Player");
         nextPlayerBut.setFont(new Font("Arial", Font.PLAIN, 14));
-        nextPlayerBut.setBounds(1060,650,170,35);
+        nextPlayerBut.setBounds(1060,630,200,35);
             //Next Round Button function
             // Function: change to next player panel
         nextPlayerBut.addActionListener(new ActionListener() {
@@ -94,34 +95,35 @@ public class GameView extends javax.swing.JFrame {
 			public void actionPerformed(ActionEvent e) {
                 gameController.checkWinCondition();
                 nextPlayer = gameController.nextPlayer();
-                gameController.updateViewPlayers();
-                gamePlayer.changePlayerPanel(nextPlayer,gamePlayer.findPlayerIndexByName(nextPlayer.getName(), players));
+                gameController.updateViewBoard();
+                gamePlayer.changePlayerPanel(nextPlayer,findPlayerIndexByName(nextPlayer.getName(), players));
                 // set current next Player
                 setCurrentPlayer(nextPlayer);
 
                 rollDiceBut.setEnabled(true);
-                payRentBut.setEnabled(false);
-                buyBut.setEnabled(false);
+                //buyBut.setEnabled(false);
                 nextPlayerBut.setEnabled(false);
             }});
 
         // Roll dice Button        
         rollDiceBut = new JButton("Roll Dice");
         rollDiceBut.setFont(new Font("Arial", Font.PLAIN, 14));
-        rollDiceBut.setBounds(1060,550,170,35);
+        rollDiceBut.setBounds(1060,580,200,35);
             //Roll dice Button function
             //TODO: change player chess location
         rollDiceBut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
                 gameController.rollDice();
+                gameController.moveCurrentPlayer();
+                // set players node
+                setPlayersNode();
                 diceNumber = gameController.getDiceNum();
 
                 if (diceNumber == 0) {
                     showGameMessage("ERROR in roll dice, please roll again");
                     rollDiceBut.setEnabled(true);
-                    payRentBut.setEnabled(false);
-                    buyBut.setEnabled(false);
+                    //buyBut.setEnabled(false);
                     nextPlayerBut.setEnabled(false);
                 }else if (diceNumber <= 6) {
                     dice1.getDiceFace((int) Math.round( diceNumber/2));
@@ -131,32 +133,26 @@ public class GameView extends javax.swing.JFrame {
                     dice2.getDiceFace(diceNumber-6);
                 }
                 showGameMessage("Roll Dice : "+ diceNumber);
-                gameBoard.updateChessLoc(gamePlayer.findPlayerIndexByName(currentPlayer.getName(), players),diceNumber );
+                board.ShowAllPlayerPostion();
+                // update chess position with the updated node list
+                gameBoard.updateChessPos(playersNode);
                 
                 rollDiceBut.setEnabled(false);
-                payRentBut.setEnabled(true);
-                buyBut.setEnabled(true);
+                //buyBut.setEnabled(true);
                 nextPlayerBut.setEnabled(true);
+                gameController.updateViewBoard();
             }});
-
-        // Pay rent Button    
-        payRentBut = new JButton("Pay Rent");
-        payRentBut.setFont(new Font("Arial", Font.PLAIN, 14));
-            // todo Pay rent function
-        payRentBut.setBounds(1170,600,170,35);
         // Buy slot Button
-        buyBut = new JButton("Buy");
+        /**buyBut = new JButton("Buy");
         buyBut.setFont(new Font("Arial", Font.PLAIN, 14));
         buyBut.setBounds(950,600,170,35);
         buyBut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
                 gameController.buyProperty();
-
-                payRentBut.setEnabled(false);
                 buyBut.setEnabled(false);
                 nextPlayerBut.setEnabled(true);
-            }});
+            }});*/
 
         // Dice 1
         dice1 = new DicePanel(300,350,40,40);
@@ -168,8 +164,7 @@ public class GameView extends javax.swing.JFrame {
         getContentPane().add(startGameBut);
         getContentPane().add(nextPlayerBut);
         getContentPane().add(rollDiceBut);
-        getContentPane().add(buyBut);
-        getContentPane().add(payRentBut);
+        //getContentPane().add(buyBut);
         gameBoard.add(dice1);
         gameBoard.add(dice2);
         
@@ -178,23 +173,37 @@ public class GameView extends javax.swing.JFrame {
         
     }
 
-    public void showGameMessage(String log){
+    public static void showGameMessage(String log){
         // show message in game log
         logText.append("> "+log+"\n");
     }
 
-    public void updatePlayers(List<Player> players) {
-        // update properties on the board
-        this.players = players;
-        //displayProperties();
+    public void updateBoard(CircularLinkedList board) {
+        // update board on the view
+        this.board = board;
+        this.players = board.getPlayers();
+        this.properties = board.getProperties();
+        setPlayersNode();
+
     }
 
     public void setCurrentPlayer(Player player){
         this.currentPlayer = player;    
     }
 
-    public void showPropertyInfo(String message){
-        JOptionPane.showMessageDialog(this, message);
+    public void setPlayersNode(){
+        List<Node> playersNode = gameController.getPlayersNode();
+        this.playersNode = playersNode;
+        
+    }
+
+    // find player index with player name
+    public int findPlayerIndexByName(String playerName,List<Player> players) {
+        OptionalInt indexOpt = IntStream.range(0, players.size())
+                                        .filter(i -> playerName.equals(players.get(i).getName()))
+                                        .findFirst();
+
+        return indexOpt.orElse(-1);
     }
 
     private void bBuyActionPerformed(java.awt.event.ActionEvent evt) {

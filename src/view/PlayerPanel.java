@@ -5,8 +5,7 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.OptionalInt;
-import java.util.stream.IntStream;
+
 
 import model.Property;
 import model.Player;
@@ -104,19 +103,11 @@ public class PlayerPanel extends JLayeredPane{
         }
     }
 
-    // find player index with player name
-    public int findPlayerIndexByName(String playerName,List<Player> players) {
-        OptionalInt indexOpt = IntStream.range(0, players.size())
-                                        .filter(i -> playerName.equals(players.get(i).getName()))
-                                        .findFirst();
-
-        return indexOpt.orElse(-1);
-    }
 
     public void changePlayerPanel(Player changePlayer,int playerNum){
         card.show(this, ""+(playerNum+1));
         updatePlayerInfoArea(changePlayer.getCash(), changePlayer.getPlayerProperty(), playerNum+1);
-        //GameView.showGameMessage("Change to "+changePlayer.getName()+" trun.");
+        GameView.showGameMessage("Change to "+changePlayer.getName()+" trun.");
     }
 
     public void startGame(){

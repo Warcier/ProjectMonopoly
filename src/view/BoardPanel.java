@@ -6,6 +6,8 @@ import javax.swing.border.*;
 
 import model.Property;
 import model.test;
+import model.list.Node;
+
 import java.util.List;
 import view.SlotSquare;
 
@@ -26,7 +28,6 @@ public class BoardPanel extends javax.swing.JLayeredPane {
     SlotSquare[] squares = new SlotSquare[SQUARE_COUNT];
     private int[] squareXCoord = new int[SQUARE_COUNT];
     private int[] squareYCoord = new int[SQUARE_COUNT];
-    private int[] playerLocation = {0,0,0,0};
     private int[] rotationAngles = {135,180,180,180,180,180,-135,
                                         -90,-90,-90,-90,-90,-45,
                                         0,0,0,0,0,45,
@@ -111,7 +112,7 @@ public class BoardPanel extends javax.swing.JLayeredPane {
 		return playerChess;
 	}
 
-    public void initPlayerChess(){
+    public void initPlayerChess(){     
         playerChess[0] = createPlayerChess(squareXCoord[0]+10,squareYCoord[0]+5,1, Color.RED);
         playerChess[1] = createPlayerChess(squareXCoord[0]+10,squareYCoord[0]+25,2, Color.BLUE);
         playerChess[2] = createPlayerChess(squareXCoord[0]+10,squareYCoord[0]+45,3, new Color(0,102,0));
@@ -135,7 +136,7 @@ public class BoardPanel extends javax.swing.JLayeredPane {
             // 
         }else if (slotNum > SQUARE_COUNT) {
             slotNum -= 24;
-            //showGameMessage("Player pass the GO PASS");
+            GameView.showGameMessage("Player pass the GO PASS");
         }
     
         // Calculate new positions for the chess based on the player number to avoid overlap
@@ -146,19 +147,19 @@ public class BoardPanel extends javax.swing.JLayeredPane {
         playerChess[playerNum].setBounds(squareXCoord[slotNum] + xOffset, squareYCoord[slotNum] + yOffset, 20, 20);
     }
 
-    //TODO: Update player chess location
-    public void updateChessLoc(int playerNum, int diceNum ){
-        int currentPlayerLoca = playerLocation[playerNum];
-        if (playerNum < 0 || playerNum >= playerChess.length) {
-            System.out.println("Invalid player number.");
-            return;
+    public void updateChessPos(List<Node> playersNodes){
+        //Update all player chess Position
+        for(int playerNum = 0; playerNum<playersNodes.size();playerNum++){
+            // loop though all node in the playersNode list
+            Node playerNode = playersNodes.get(playerNum);
+            if (playerNode == null) {
+                continue;
+            }
+            // get players node slot num [player location]
+            int playerLocation  = playerNode.getSlot();
+            movePlayerChess(playerNum, playerLocation);
         }
-        if (diceNum < 0 || diceNum > 13) {
-            System.out.println("Invalid dice number.");
-            return;
-        }
-        currentPlayerLoca+=diceNum;
-        movePlayerChess(playerNum, currentPlayerLoca);
-        playerLocation[playerNum] = currentPlayerLoca;
+        
+
     }  
 }

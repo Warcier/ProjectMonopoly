@@ -2,6 +2,7 @@ package controller;
 
 import model.*;
 import model.list.CircularLinkedList;
+import model.list.Node;
 import view.GameView;
 
 import java.util.*; 
@@ -54,16 +55,15 @@ public class GameController {
         return gameModel.getCurrPlayer();
     }
 
-    public List<Player> getPlayers() {
-        // get player list from model
-        // Returns an unmodifiable list to prevent modification from the view
-        return Collections.unmodifiableList(gameModel.getBoard().getPlayers());
+    public CircularLinkedList getBoard() {
+        // get board from model
+        return gameModel.getBoard();
     }
 
-    public void updateViewPlayers(){
+    public void updateViewBoard(){
         // get slot details
-        List<Player> players = getPlayers();
-        gameView.updatePlayers(players);
+        CircularLinkedList board = getBoard();
+        gameView.updateBoard(board);
     }
 
     public void createBoard(){
@@ -71,5 +71,23 @@ public class GameController {
         gameModel.getBoard().createBoard();
     }
 
-    //TODO: get current round player information
+    public List<Node> getPlayersNode(){
+        // return a list of player current Node
+        List<Node> playersNode = new ArrayList<>();
+        CircularLinkedList board = getBoard();
+        List<Player> players = board.getPlayers();
+        for (int i=0; i<players.size();i++){
+            if(players.get(i).isBankrupt()){
+                playersNode.add(i, null);
+                continue;
+            }
+            playersNode.add(i, board.findPlayerNode(players.get(i)));           
+        } 
+        return playersNode;
+    }
+
+    public void addGameMessageToLog(String message){
+        // add game log to View( TextArea logText )
+        gameView.showGameMessage(message);
+    }
 }
