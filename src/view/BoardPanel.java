@@ -4,7 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import model.list.Node;
+import model.list.*;
 import model.*;
 
 import java.util.List;
@@ -129,10 +129,10 @@ public class BoardPanel extends javax.swing.JLayeredPane {
         GameView.showGameMessage("Add Player to the monoploy board.");
     }
 
-    public void movePlayerChess(Player player, List<Node> playersNodes) {
+    public void movePlayerChess(Player player) {
         // Move player chess Position
-        if (playersNodes == null) {
-            System.out.println(" Error Player Node not found.");
+        if (player == null) {
+            System.out.println(" Error Player not found.");
             return;
         }
         int playerNum = 0;
@@ -147,9 +147,11 @@ public class BoardPanel extends javax.swing.JLayeredPane {
         }else{
             System.out.println("Invaild Player");
         }
-        Node playerNode = playersNodes.get(playerNum);
+        CircularLinkedList board = GameView.getboardList();
+        Node playerNode = board.findPlayerNode(player);
         if (playerNode == null) {
-            System.out.println("Player not found");
+            System.out.println("Player not found in the board");
+            return;
         }
         // get players node slot num [player location]
         int slotNum  = playerNode.getSlot();

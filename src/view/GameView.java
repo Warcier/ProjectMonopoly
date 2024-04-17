@@ -123,8 +123,6 @@ public class GameView extends javax.swing.JFrame {
                 // roll dice button logic
                 gameController.rollDice();
                 gameController.moveCurrentPlayer();
-                // set players node
-                setPlayersNode();
                 diceNumber = gameController.getDiceNum();
 
                 if (diceNumber == 0) {
@@ -140,11 +138,11 @@ public class GameView extends javax.swing.JFrame {
                     dice2.getDiceFace(diceNumber-6);
                 }
                 showGameMessage("Roll Dice : "+ diceNumber);
-                board.ShowAllPlayerPostion();
+
                 // update chess position with the updated node list
-                gameBoard.movePlayerChess(currentPlayer,playersNode);
-                // check if the game over
-                gameController.checkWinCondition();
+                // update board to latest
+                gameController.updateViewBoard();
+                gameBoard.movePlayerChess(currentPlayer);
                 
                 rollDiceBut.setEnabled(false);
                 //buyBut.setEnabled(true);
