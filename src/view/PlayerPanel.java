@@ -4,15 +4,13 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
-import controller.GameController;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 
+import controller.GameController;
 import model.Property;
 import model.Player;
-import model.list.*;
 
 
 public class PlayerPanel extends JLayeredPane{
@@ -27,10 +25,10 @@ public class PlayerPanel extends JLayeredPane{
     private final int PANEL_WIDTH;
     private final int PANEL_HEIGHT;
     private JPanel beforeStartPanel;
-    private CircularLinkedList board;
-    
+    GameController gameController;
 
     public PlayerPanel(int xCoord, int yCoord, int width, int height){
+        this.gameController = gameController;
         // player panel for display player information
         setBorder(new LineBorder(new Color(0, 0, 0)));
 		setBounds(xCoord, yCoord, width, height);
@@ -50,6 +48,12 @@ public class PlayerPanel extends JLayeredPane{
         this.add(beforeStartPanel);
         
     }
+
+    public void setGameController(GameController gameController) {
+        this.gameController = gameController;
+    }
+
+
 
     // create the player information display panel
     private JPanel createPlayerPanel(int panelWidth,int panelHeight,String playerName,Color playerColor, int playerNum){
@@ -103,8 +107,16 @@ public class PlayerPanel extends JLayeredPane{
             System.out.println("Error player panel (Invalid player) : " + player.getName());
             return;
         }
-        this.board = GameView.getboardList();
+        JTextArea playerInfoArea = getjTextArea(player);
+        // Display player current position
+        //playerInfoArea.append("Position: "+ board.findPlayerNode(player).getSlot()+"\n");
+        // Display player current Property
+        playerInfoArea.append("Own Property: "+propertiesToString(player.getPlayerProperty())+"\n");
+    }
+
+    private static JTextArea getjTextArea(Player player) {
         int playerNum = 0;
+
         if ("Player 1".equals(player.getName())) {
             playerNum = 0;
         }else if ("Player 2".equals(player.getName())) {
@@ -114,15 +126,13 @@ public class PlayerPanel extends JLayeredPane{
         }else if ("Player 4".equals(player.getName())) {
             playerNum = 3;
         }
+
         JPanel currentPlayerPanel = playerPanels[playerNum];
         JScrollPane infoScrollPane = (JScrollPane) currentPlayerPanel.getComponent(1); // Assuming the JScrollPane is the second component
         JTextArea playerInfoArea = (JTextArea) infoScrollPane.getViewport().getView();
         // Display player current cash
-        playerInfoArea.setText("Current Cash: "+player.getCash()+"\n");
-        // Display player current position
-        //playerInfoArea.append("Position: "+ board.findPlayerNode(player).getSlot()+"\n");
-        // Display player current Property
-        playerInfoArea.append("Own Property: "+propertiesToString(player.getPlayerProperty())+"\n");
+        playerInfoArea.setText("Current Cash: "+ player.getCash()+"\n");
+        return playerInfoArea;
     }
 
     private String propertiesToString(List<Property> playerProperties) {
@@ -140,6 +150,7 @@ public class PlayerPanel extends JLayeredPane{
     public void changePlayerPanel(Player changePlayer){
         // change player information panel logic
         int playerNum = 0;
+
         if (changePlayer.getName() == "Player 1") {
             playerNum = 1;
         }else if (changePlayer.getName() == "Player 2") {

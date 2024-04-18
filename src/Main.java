@@ -15,7 +15,16 @@ public class Main {
         gameController.setGameModel(gameModel);
         gameController.setGameView(gameView);
         gameView.setGameController(gameController);
+        gameView.setViewBoard(gameController.getBoard());
+        gameView.setGameBoardController(gameController);
+        gameView.setPlayerPanelController(gameController);
         gameModel.setGameController(gameController);
+
+        if (gameModel.getBoard() == null) {
+            gameModel.createBoard();
+        }
+
+
 
 
         java.awt.EventQueue.invokeLater(() -> gameView.setVisible(true));

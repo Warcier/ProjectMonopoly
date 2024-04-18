@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
+import controller.GameController;
 import model.list.*;
 import model.*;
 
@@ -17,6 +18,7 @@ public class BoardPanel extends javax.swing.JLayeredPane {
      * Creates new form BoardPanel
      */
     // set required var
+    GameController gameController;
     private JLabel[] playerChess = new JLabel[4];
     private static final int PANEL_WIDTH = 896;
     private static final int PANEL_HEIGHT = 644;
@@ -32,8 +34,9 @@ public class BoardPanel extends javax.swing.JLayeredPane {
                                         0,0,0,0,0,45,
                                         90,90,90,90,90,90};
     
-    
+
     public BoardPanel(int xCoord, int yCoord) {
+        this.gameController = gameController;
         // create monoploy game board
         setBorder(new LineBorder(new Color(0, 0, 0)));
 		setBounds(xCoord, yCoord, PANEL_WIDTH, PANEL_HEIGHT);
@@ -48,6 +51,11 @@ public class BoardPanel extends javax.swing.JLayeredPane {
         initializeSquares();
         initializeMonoLabel(200,220);
     }
+
+    public void setGameController(GameController gameController) {
+        this.gameController = gameController;
+    }
+
 
 
     private void initializeSquares() {
@@ -78,7 +86,7 @@ public class BoardPanel extends javax.swing.JLayeredPane {
             squareXCoord[slotNum] = xCoordSquare;
             squareYCoord[slotNum] = yCoordSquare;
 
-            squares[slotNum] = new SlotSquare(xCoordSquare, yCoordSquare, squareWidth, squareHeight, slotNum, rotationAngles[slotNum]);
+            squares[slotNum] = new SlotSquare(xCoordSquare, yCoordSquare, squareWidth, squareHeight, slotNum, rotationAngles[slotNum], gameController);
             this.add(squares[slotNum],PALETTE_LAYER);
         }
     }
@@ -135,7 +143,9 @@ public class BoardPanel extends javax.swing.JLayeredPane {
             System.out.println(" Error Player not found.");
             return;
         }
+
         int playerNum = 0;
+
         if ("Player 1".equals(player.getName())) {
             playerNum = 0;
         }else if ("Player 2".equals(player.getName())) {
@@ -147,8 +157,10 @@ public class BoardPanel extends javax.swing.JLayeredPane {
         }else{
             System.out.println("Invaild Player");
         }
-        CircularLinkedList board = GameView.getboardList();
-        Node playerNode = board.findPlayerNode(player);
+
+
+        Node playerNode = gameController.findPlayerNode(player);
+
         if (playerNode == null) {
             System.out.println("Player not found in the board");
             return;

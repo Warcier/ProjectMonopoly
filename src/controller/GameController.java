@@ -20,15 +20,23 @@ public class GameController {
         this.gameView = gameView;
     }
 
+    public List<Player> getPlayers(){
+        return gameModel.getBoard().getPlayers();
+    }
+
 
     public void rollDice() {
         // Implement roll dice logic here
         gameModel.rollDice();
     }
 
-    public void moveCurrentPlayer() {
+    public Player getCurrentPlayer() {
+        // Get current player to show in view
+        return gameModel.getCurrPlayer();
+    }
+    public void  moveCurrentPlayer(Player player, int diceNum){
         // Implement move player logic here
-        gameModel.moveCurrentPlayer();
+        gameModel.moveCurrentPlayer(player, diceNum);
     }
 
     public int getDiceNum(){
@@ -48,11 +56,11 @@ public class GameController {
 
     }
 
-    public Player nextPlayer() {
+    public void nextPlayer() {
         // Implement next player logic here
         gameModel.endTurn();
         //get next player;
-        return gameModel.getCurrPlayer();
+
     }
 
     public CircularLinkedList getBoard() {
@@ -60,31 +68,36 @@ public class GameController {
         return gameModel.getBoard();
     }
 
+    // Fix later
     public void updateViewBoard(){
         // get slot details
-        CircularLinkedList board = getBoard();
-        gameView.updateBoard(board);
+        gameView.updateBoard();
     }
 
     public void createBoard(){
         // create board
-        gameModel.getBoard().createBoard();
+        gameModel.createBoard();
     }
 
-    public List<Node> getPlayersNode(){
+    public Node findPlayerNode(Player player){
+        // find player node
+        return gameModel.getBoard().findPlayerNode(player);
+    }
+
+    public List<Node> getPlayersNode(CircularLinkedList board){
         // return a list of player current Node
         List<Node> playersNode = new ArrayList<>();
-        CircularLinkedList board = getBoard();
-        List<Player> players = board.getPlayers();
-        for (int i=0; i<players.size();i++){
-            if(players.get(i).isBankrupt()){
+        for (int i=0; i < board.getPlayers().size();i++){
+            Player player = board.getPlayers().get(i);
+            if(player == null || !player.isBankrupt()){
                 playersNode.add(i, null);
                 continue;
             }
-            playersNode.add(i, board.findPlayerNode(players.get(i)));           
-        } 
+            playersNode.add(i, board.findPlayerNode(player));
+        }
         return playersNode;
     }
+
     public Player getCurrentPlayerToView(){
         return gameModel.getCurrPlayer();
     }
@@ -97,5 +110,15 @@ public class GameController {
     public void addPlayerActionTakenToView(Player player, String action){
         // add action message that taken by program auto
         gameView.addPlayerTakenAction(player, action);
+    }
+
+    public List<Property> getProperties() {
+        // get properties from model
+        return gameModel.getBoard().getProperties();
+    }
+
+    public void ShowAllPlayerNode(){
+        gameModel.getBoard().ShowAllPlayerPostion();
+
     }
 }

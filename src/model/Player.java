@@ -9,6 +9,7 @@ public class Player {
     private List<Property> ownProperty;
 
     public Player(String name){
+        this.cash = 15000;
         this.name = name;
     }
 
@@ -40,7 +41,4 @@ public class Player {
         this.ownProperty.add(property);
     }
 
-    public void clearProperty(){
-        this.ownProperty.clear();
-    }
 }

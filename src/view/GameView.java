@@ -4,8 +4,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.List; 
-import java.util.OptionalInt;
-import java.util.stream.IntStream;
 
 import controller.GameController;
 import model.Property;
@@ -27,20 +25,32 @@ public class GameView extends javax.swing.JFrame {
     private DicePanel dice1;
     private DicePanel dice2;
 
-    private static CircularLinkedList board;
-    private List<Property> properties;
-    private List<Player> players;
-    private List<Node> playersNode;
-    private int diceNumber;
     private Player currentPlayer;
     private Player nextPlayer;
     private boolean winCondition = false;
-    
+    private CircularLinkedList board;
+    private List<Player> players;
+    private List<Property> properties;
+    private List<Node> playersNode;
+
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
     }
 
+    public void setViewBoard(CircularLinkedList board){
+        this.board = board;
+    }
+
+    public void setGameBoardController(GameController controller){
+        this.gameBoard.setGameController(controller);
+    }
+
+    public void setPlayerPanelController(GameController controller){
+        this.gamePlayer.setGameController(controller);
+    }
+
     public GameView() {
+
         //initComponents();
         setPreferredSize(new Dimension(1400, 750));
         setLayout(null);
@@ -50,6 +60,7 @@ public class GameView extends javax.swing.JFrame {
         gameBoard = new BoardPanel(10,20);
         gameBoard.setBackground(new Color(51, 255, 153));
         getContentPane().add(gameBoard);
+
         // Player Section
         gamePlayer = new PlayerPanel(950,10,400,280);
         getContentPane().add(gamePlayer);
@@ -96,7 +107,8 @@ public class GameView extends javax.swing.JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
                 // set next player to model
-                nextPlayer = gameController.nextPlayer();
+                gameController.nextPlayer();
+                nextPlayer = gameController.getCurrentPlayer();
                 // update board to latest
                 gameController.updateViewBoard();
                 // change player panel
@@ -122,8 +134,9 @@ public class GameView extends javax.swing.JFrame {
 			public void actionPerformed(ActionEvent e) {
                 // roll dice button logic
                 gameController.rollDice();
-                gameController.moveCurrentPlayer();
-                diceNumber = gameController.getDiceNum();
+                int diceNumber = gameController.getDiceNum();
+
+                // gameController.ShowAllPlayerNode();
 
                 if (diceNumber == 0) {
                     showGameMessage("ERROR in roll dice, please roll again");
@@ -141,9 +154,9 @@ public class GameView extends javax.swing.JFrame {
 
                 // update chess position with the updated node list
                 // update board to latest
-                gameController.updateViewBoard();
+                updateBoard();
                 gameBoard.movePlayerChess(currentPlayer);
-                
+                gameController.moveCurrentPlayer(currentPlayer, diceNumber);
                 rollDiceBut.setEnabled(false);
                 //buyBut.setEnabled(true);
                 nextPlayerBut.setEnabled(true);
@@ -187,6 +200,7 @@ public class GameView extends javax.swing.JFrame {
         
     }
 
+
     public static void showGameMessage(String log){
         // show message in game log
         logText.append("> "+log+"\n");
@@ -198,11 +212,11 @@ public class GameView extends javax.swing.JFrame {
 
     }
 
-    public void updateBoard(CircularLinkedList board) {
+    public void updateBoard() {
         // update board on the view
-        this.board = board;
-        this.players = board.getPlayers();
-        this.properties = board.getProperties();
+        this.board = gameController.getBoard();
+        this.players = gameController.getPlayers();
+        this.properties = gameController.getProperties();
         setPlayersNode();
 
     }
@@ -214,18 +228,10 @@ public class GameView extends javax.swing.JFrame {
 
     public void setPlayersNode(){
         // update the player node list to get least player location
-        List<Node> playersNode = gameController.getPlayersNode();
-        this.playersNode = playersNode;
+        this.playersNode = gameController.getPlayersNode(board);
         
     }
 
-    public static CircularLinkedList getboardList(){
-        // transfer board to other Panel
-        if (board == null) {
-            return null;
-        }
-        return board;
-   }
 
    private void checkWinCondition(){
         if (gameController.checkWinCondition()) {

@@ -15,7 +15,7 @@ public class GameModel {
 
     public GameModel(List<Player> players, List<Property> properties) {
         this.board = new CircularLinkedList(players, properties);
-        this.turnController = new TurnController(test.initPlayer());
+        this.turnController = new TurnController();
         this.dice = new Dice();
     }
 
@@ -27,8 +27,12 @@ public class GameModel {
         return board;
     }
 
-    public void moveCurrentPlayer() {
-        board.movePlayerToNextNode(turnController.getCurrentPlayer(), dice.getDiceNumber());
+    public void createBoard(){
+        board.createBoard();
+    }
+
+    public void moveCurrentPlayer(Player player,int diceNum){
+        board.movePlayerToNextNode(player, diceNum);
     }
 
     public void rollDice() {

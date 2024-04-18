@@ -3,13 +3,12 @@ package model.list;
 import model.Player;
 import model.Property;
 
-import java.awt.color.ICC_Profile;
 import java.util.List;
 
 public class CircularLinkedList {
 
-    List<Player> players;
-    List<Property> properties;
+    public static List<Player> players;
+    public static List<Property> properties;
 
     public Node head;
     public Node tail;
@@ -20,8 +19,8 @@ public class CircularLinkedList {
      * Constructor
      */
     public CircularLinkedList(List<Player> players, List<Property> properties){
-        this.players = players;
-        this.properties = properties;
+        CircularLinkedList.players = players;
+        CircularLinkedList.properties = properties;
         head = null;
         tail = null;
         size = 0;
@@ -49,6 +48,7 @@ public class CircularLinkedList {
             newNode.setSlot(i);
             if (head == null) {
                 head = newNode;
+                head.playersOnThisLand = players;
                 tail = newNode;
                 head.next = head;
             } else {
@@ -70,6 +70,7 @@ public class CircularLinkedList {
     public Node findPlayerNode(Player player) {
 
         if (player.isBankrupt()) {
+            System.out.println("Player is bankrupt.");
             return null;
         }
 
@@ -148,24 +149,27 @@ public class CircularLinkedList {
      * Move the player to the next node
      */
     public void movePlayerToNextNode(Player movingPlayer, int diceNumber) {
+        Node currentNode = findPlayerNode(movingPlayer);
+
+        if (currentNode == null) {
+            System.out.println("Player not found on any node.");
+            return;
+        }
+
+        // Remove the player from the current node
+        currentNode.playersOnThisLand.remove(movingPlayer);
+
+        // Move the player to the next node based on the dice number
+        Node nextNode = currentNode;
         for (int i = 0; i < diceNumber; i++) {
-            try {
-                Node current = head;
-                do {
-                    if (current.playersOnThisLand.contains(movingPlayer)) {
-                        current.playersOnThisLand.remove(movingPlayer);
-                        current.next.playersOnThisLand.add(movingPlayer);
-                        if (current.next == head) {
-                            giveBonusGO(movingPlayer);
-                        }
-                        return;
-                    }
-                    current = current.next;
-                } while (current != head);
-            } catch (Exception e) {
-                System.out.println("An error occurred while trying to move the player: " + e.getMessage());
+            nextNode = nextNode.next;
+            if (nextNode == head) {
+                giveBonusGO(movingPlayer);
             }
         }
+
+        // Add the player to the next node
+        nextNode.playersOnThisLand.add(movingPlayer);
 
     }
 
@@ -190,18 +194,15 @@ public class CircularLinkedList {
      */
     public void ShowAllPlayerPostion(){
         Node current = head;
-        int counter = 0;
         do {
-            if (current.playersOnThisLand != null && !current.playersOnThisLand.isEmpty()){
-                for (Player player : current.playersOnThisLand) {
-                    System.out.println("====================================");
+            System.out.println("Node position: " + current.getSlot());
+            for (Player player : current.playersOnThisLand) {
+                if (player != null) {
                     System.out.println("Player: " + player.getName());
-                    System.out.println("Player is on land: " + counter);
-                    System.out.println("====================================");
                 }
             }
+            System.out.printf("--------------------\n");
             current = current.next;
-            counter++;
         } while (current != head);
     }
 

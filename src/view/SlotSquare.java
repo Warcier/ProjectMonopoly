@@ -22,8 +22,6 @@ public class SlotSquare extends javax.swing.JLayeredPane{
     private JLabel priceLabel;
 
     private List<Property> properties = test.initProperty();
-
-    private CircularLinkedList board;
     private ArrayList<String> slotNames = new ArrayList<>();
     private ArrayList<Integer> slotPrices = new ArrayList<>();
     private int slotPrice;
@@ -32,7 +30,8 @@ public class SlotSquare extends javax.swing.JLayeredPane{
     /**
      * Creates new form Square
      */
-    public SlotSquare(int xCoord, int yCoord, int width, int height,int slotNum, int rotationDegrees ) {
+    public SlotSquare(int xCoord, int yCoord, int width, int height,int slotNum, int rotationDegrees, GameController controller) {
+        this.controller = controller;
         // sqaure to show the slot
         setBorder(new LineBorder(new Color(0,0,0)));
         setBounds(xCoord,yCoord,width,height);
@@ -147,17 +146,12 @@ public class SlotSquare extends javax.swing.JLayeredPane{
             slotPrices.add(slot.getLandPrice());
         }
     }
-    public void setBoard(CircularLinkedList board){
-        // set board
-        this.board = controller.getBoard();
-    }
 
     private void displayDetails(){
         // Dialog for display slot information
-        CircularLinkedList board = GameView.getboardList();
         Node slot = null;
-        if (board != null) {
-            slot = board.getNode(slotNum);
+        if (controller.getBoard() != null) {
+            slot = controller.getBoard().getNode(slotNum);
         }
         JDialog detailDialog = new JDialog();
         detailDialog.setTitle("Slot "+ slotNum+ " Details");
