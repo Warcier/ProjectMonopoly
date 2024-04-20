@@ -3,17 +3,19 @@ package model.list;
 import model.Player;
 import model.Property;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CircularLinkedList {
 
-    public static List<Player> players;
-    public static List<Property> properties;
+    private static List<Player> players;
+    private static List<Property> properties;
 
-    public Node head;
-    public Node tail;
+    private Node head;
+    private Node tail;
     private int size;
     private static final int MAX_SIZE = 23;
+
 
     /**
      * Constructor
@@ -26,7 +28,7 @@ public class CircularLinkedList {
         size = 0;
     }
 
-    public List<Player> getPlayers() {
+    public static List<Player> getPlayers() {
         return players;
     }
 
@@ -90,30 +92,40 @@ public class CircularLinkedList {
         return null;
     }
 
-    public void isPlayerBankrupt(Player player) {
-        if (player.getCash() <= 0) {
+    public void PlayerBankrupted(Player player){
+        Node current = findPlayerNode(player);
+        if (current != null) {
             player.playerBankrupted();
-            removePlayers(player);
+            current.playersOnThisLand.remove(player);
         }
+
     }
 
     public void payRent(Player rentPlayer, Node node) {
-        Player owner = propertyOwner(node);
+        Player owner = propertyOwner(rentPlayer);
+
         int rentPrice = node.getProperty().getRentPrice();
 
         if (owner != null) {
-            rentPlayer.setCash(rentPlayer.getCash() - rentPrice);
-            owner.setCash(owner.getCash() + rentPrice);
+            if (rentPlayer.getCash() < rentPrice) {
+                owner.addCash(rentPlayer.getCash() + owner.getCash());
+                this.PlayerBankrupted(rentPlayer);
+                return;
+            }
+            rentPlayer.addCash(rentPlayer.getCash() - rentPrice);
+            owner.addCash(owner.getCash() + rentPrice);
         }
-
-        isPlayerBankrupt(rentPlayer);
     }
 
     public void buyProperty(Player player) {
+        if (player.isBankrupt()) {
+            return;
+        }
+
         Node current = findPlayerNode(player);
         if (current != null) {
             if (current.getProperty().getLandPrice() > player.getCash()) {
-                this.removePlayers(player);
+                this.PlayerBankrupted(player);
                 return;
             }
             player.addProperty(current.getProperty());
@@ -122,34 +134,26 @@ public class CircularLinkedList {
     }
 
     public void giveBonusGO(Player player) {
-            player.setCash(2000);
+            player.addCash(2000);
     }
 
-    public boolean isPropertyOwned(Node node) {
-        return node.getOwner() != null;
-    }
-
-    public Player propertyOwner(Node node) {
+    public Player propertyOwner(Player player) {
+        Node node = findPlayerNode(player);
         if (node.getOwner() != null) {
             return node.getOwner();
         }
         return null;
     }
 
-    public void checkIfBuyOrPayRent(Player player, Node node) {
-        if (isPropertyOwned(node)) {
-            payRent(player, node);
-        } else {
-            buyProperty(player);
-        }
-
-
-    }
-
     /**
      * Move the player to the next node
      */
     public void movePlayerToNextNode(Player movingPlayer, int diceNumber) {
+        if (movingPlayer.isBankrupt()) {
+            System.out.println("Player is bankrupt.");
+            return;
+        }
+
         Node currentNode = findPlayerNode(movingPlayer);
 
         if (currentNode == null) {
@@ -175,21 +179,6 @@ public class CircularLinkedList {
     }
 
 
-    public void removePlayers(Player player) {
-        // Update players remaining
-        this.players.remove(player);
-    }
-
-
-
-
-    public void getNodeInfo(Node node) {
-        System.out.println("Slot: " + node.getSlot());
-        System.out.println("Property: " + node.getProperty().getLandName());
-        System.out.println("Owner: " + node.getOwner());
-        System.out.println("Rent Price: " + node.getProperty().getRentPrice());
-    }
-
     /**
      * Show all player position
      */
@@ -208,15 +197,30 @@ public class CircularLinkedList {
     }
 
 
-    public boolean checkWinCondition() {
-        return players.size() == 1;
+    public Player checkWinCondition() {
+        List<Player> notBankruptPlayers = new ArrayList<>();
+        List<Player> playerBankrupt = new ArrayList<>();
+
+        for (Player player : players) {
+            if (!player.isBankrupt()) {
+                notBankruptPlayers.add(player);
+            } else {
+                playerBankrupt.add(player);
+            }
+        }
+
+        if (notBankruptPlayers.size() == 1) {
+            return notBankruptPlayers.get(0);
+        }
+
+        return null;
     }
 
-    public Node getNode(int num) {  
+    public Node getNode(int num) {
         // find Node
         if (head == null || num < 0) {
             return null; 
-        }  
+        }
         Node current = head;
         int count = 0;
         do {
@@ -229,4 +233,5 @@ public class CircularLinkedList {
     
         return null; 
     }
+
 }

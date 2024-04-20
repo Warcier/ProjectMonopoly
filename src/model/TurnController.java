@@ -9,13 +9,15 @@ public class TurnController {
     private int currentPlayerIndex;
 
     public TurnController() {
-        this.players = CircularLinkedList.players;
+        this.players = CircularLinkedList.getPlayers();
         this.currentPlayerIndex = 0;
     }
 
     public Player getCurrentPlayer() {
         return players.get(currentPlayerIndex);
     }
+
+
 
     public void nextTurn() {
         if (currentPlayerIndex == players.size() - 1) {

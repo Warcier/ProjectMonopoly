@@ -155,8 +155,33 @@ public class GameView extends javax.swing.JFrame {
                 // update chess position with the updated node list
                 // update board to latest
                 updateBoard();
+
                 gameBoard.movePlayerChess(currentPlayer);
-                gameController.moveCurrentPlayer(currentPlayer, diceNumber);
+                // move player to next node in model
+                //First check if player is already bankrupted else skip
+                if (currentPlayer.isBankrupt()) {
+                    showGameMessage("Player "+currentPlayer.getName()+" is bankrupt");
+                    rollDiceBut.setEnabled(false);
+                    //buyBut.setEnabled(false);
+                    nextPlayerBut.setEnabled(true);
+                    return;
+                } else {
+                    gameController.moveCurrentPlayer(currentPlayer, diceNumber);
+                }
+
+                // check if Buy or Rent after moving to new node
+                Node node = gameController.findPlayerNode(currentPlayer);
+                if (node.getOwner() != null) {
+                    showGameMessage("Player "+currentPlayer.getName()+" has to pay rent to "+node.getOwner().getName());
+                    gameController.payRent(currentPlayer, node);
+                }
+
+                if (node.getOwner() == null) {
+                    showGameMessage("Player "+currentPlayer.getName()+" bought the property");
+                    gameController.buyProperty(currentPlayer);
+                }
+
+
                 rollDiceBut.setEnabled(false);
                 //buyBut.setEnabled(true);
                 nextPlayerBut.setEnabled(true);
@@ -234,7 +259,9 @@ public class GameView extends javax.swing.JFrame {
 
 
    private void checkWinCondition(){
-        if (gameController.checkWinCondition()) {
+
+        if (gameController.checkWinCondition() != null) {
+            Player winner = gameController.checkWinCondition();
             winCondition = true;
             nextPlayerBut.setEnabled(false);
 
@@ -255,7 +282,7 @@ public class GameView extends javax.swing.JFrame {
             gameOverLabel.setFont(new Font("Arial", Font.BOLD, 18));
             gameOverLabel.setForeground(Color.WHITE);
     
-            JLabel winPlayerJLabel = new JLabel(currentPlayer.getName()+" has win the game");    
+            JLabel winPlayerJLabel = new JLabel(winner.getName()+" has win the game");
             winPlayerJLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             winPlayerJLabel.setFont(new Font("Arial", Font.BOLD, 18));
             winPlayerJLabel.setForeground(Color.WHITE);

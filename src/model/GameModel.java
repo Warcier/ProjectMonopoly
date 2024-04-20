@@ -2,6 +2,7 @@ package model;
 
 import controller.GameController;
 import model.list.CircularLinkedList;
+import model.list.Node;
 
 import java.util.List;
 
@@ -44,11 +45,6 @@ public class GameModel {
         return dice.getDiceNumber();
     }
 
-    public void buyProperty() {
-        board.checkIfBuyOrPayRent(turnController.getCurrentPlayer(), board.findPlayerNode(turnController.getCurrentPlayer()));
-    }
-
-
 
     // TURN LOGIC
     public void endTurn() {
@@ -56,7 +52,7 @@ public class GameModel {
         // Other end turn logic...
     }
 
-    public boolean checkWinCondition() {
+    public Player checkWinCondition() {
         // Implement check win condition logic here
         return board.checkWinCondition();
     }
@@ -64,5 +60,21 @@ public class GameModel {
     public Player getCurrPlayer(){
         //get current Player
         return turnController.getCurrentPlayer();
+    }
+
+    public void findPropertyOwner(Player player){
+        board.propertyOwner(player);
+    }
+
+    public void payRent(Player currentPlayer, Node propertyNode) {
+        board.payRent(currentPlayer, propertyNode);
+    }
+
+    public void buyProperty(Player currentPlayer) {
+        board.buyProperty(currentPlayer);
+    }
+
+    public void addGameMessage(String message){
+        gameController.addGameMessageToLog(message);
     }
 }

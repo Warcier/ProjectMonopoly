@@ -21,7 +21,7 @@ public class SlotSquare extends javax.swing.JLayeredPane{
     private JLabel nameLabel;
     private JLabel priceLabel;
 
-    private List<Property> properties = test.initProperty();
+    private final List<Property> properties = test.initProperty();
     private ArrayList<String> slotNames = new ArrayList<>();
     private ArrayList<Integer> slotPrices = new ArrayList<>();
     private int slotPrice;

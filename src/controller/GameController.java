@@ -44,13 +44,8 @@ public class GameController {
         return gameModel.getDiceNum();
     }
 
-    public void buyProperty() {
-        // Implement buy property logic here
-        gameModel.buyProperty();
-    }
-
     // Call every turn to check if a player has won
-    public boolean checkWinCondition() {
+    public Player checkWinCondition() {
         // Implement check win condition logic here
         return gameModel.checkWinCondition();
 
@@ -120,5 +115,21 @@ public class GameController {
     public void ShowAllPlayerNode(){
         gameModel.getBoard().ShowAllPlayerPostion();
 
+    }
+
+
+    public void findPropertyOwner(Player currentPlayer) {
+        // Implement find property owner logic here
+        gameModel.findPropertyOwner(currentPlayer);
+    }
+
+    public void payRent(Player currentPlayer, Node propertyNode) {
+        // Implement pay rent logic here
+        gameModel.payRent(currentPlayer, propertyNode);
+    }
+
+    public void buyProperty(Player currentPlayer) {
+        // Implement buy property logic here
+        gameModel.buyProperty(currentPlayer);
     }
 }

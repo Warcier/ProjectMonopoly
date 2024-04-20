@@ -9,8 +9,8 @@ public class Main {
     public static void main(String[] args) {
 
         GameView gameView = new GameView();
-        GameModel gameModel = new GameModel(test.initPlayer(), test.initProperty());
         GameController gameController = new GameController();
+        GameModel gameModel = new GameModel(test.initPlayer(), test.initProperty());
 
         gameController.setGameModel(gameModel);
         gameController.setGameView(gameView);
