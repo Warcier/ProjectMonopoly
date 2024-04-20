@@ -11,6 +11,7 @@ public class GameModel {
     private GameController gameController;
     private TurnController turnController;
     private final CircularLinkedList board;
+    private Editor editor;
 
 
 
@@ -18,6 +19,7 @@ public class GameModel {
         this.board = new CircularLinkedList(players, properties);
         this.turnController = new TurnController();
         this.dice = new Dice();
+        this.editor = new Editor(board, turnController);
     }
 
     public void setGameController(GameController gameController) {
@@ -72,6 +74,11 @@ public class GameModel {
 
     public void buyProperty(Player currentPlayer) {
         board.buyProperty(currentPlayer);
+    }
+
+    public Editor getEditor(){
+        //get editor
+        return editor;
     }
 
     public void addGameMessage(String message){

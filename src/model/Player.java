@@ -31,8 +31,20 @@ public class Player {
         this.isBankrupt = true;
     }
 
+    public void setBankrupt(boolean isBankrupt){
+        this.isBankrupt = isBankrupt;
+    }
+
     public void addCash(int amount){
         this.cash = this.cash + amount;
+    }
+
+    public void deductCash(int amount){
+        this.cash = this.cash - amount;
+    }
+
+    public void setCash(int amount){
+        this.cash = amount;
     }
 
     public List<Property> getPlayerProperty(){
