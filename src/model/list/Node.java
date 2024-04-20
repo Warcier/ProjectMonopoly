@@ -43,10 +43,6 @@ public class Node {
         this.slot = slot;
     }
 
-    public List<Player> getPlayerOnThisLand() {
-        return playersOnThisLand;
-    }
-
     public void getIndex(Player player) {
         System.out.println(playersOnThisLand.indexOf(player));
     }
