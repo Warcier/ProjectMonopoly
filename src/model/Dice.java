@@ -1,4 +1,3 @@
-package com3101_project;
 import java.util.Random;
 /**
  *

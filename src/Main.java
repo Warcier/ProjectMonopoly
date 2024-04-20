@@ -1,42 +1,36 @@
-import gameutils.GameLogic;
-import model.Player;
-import model.list.CircularLinkedList;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static gameutils.GameLogic.*;
+import controller.GameController;
+import model.GameModel;
+import model.test;
+import view.GameView;
 
 public class Main {
 
 
     public static void main(String[] args) {
-        // Player reference
-        List<Player> players = new ArrayList<>();
-        CircularLinkedList list = new CircularLinkedList();
+
+        GameView gameView = new GameView();
+        GameController gameController = new GameController();
+        GameModel gameModel = new GameModel(test.initPlayer(), test.initProperty());
+
+        gameController.setGameModel(gameModel);
+        gameController.setGameView(gameView);
+        gameView.setGameController(gameController);
+        gameView.setViewBoard(gameController.getBoard());
+        gameView.setGameBoardController(gameController);
+        gameView.setPlayerPanelController(gameController);
+        gameModel.setGameController(gameController);
+
+        if (gameModel.getBoard() == null) {
+            gameModel.createBoard();
+        }
 
 
-        //Init Player
-        players.add(new Player("Player 1"));
-        players.add(new Player("Player 2"));
-        players.add(new Player("Player 3"));
-        players.add(new Player("Player 4"));
-
-        //Init Game Board
-        list.createBoard();
 
 
-        // Add Player to Starting Position
-        List<Player> playersCopy = new ArrayList<>(players);
-        list.AddPlayer(playersCopy);
+        java.awt.EventQueue.invokeLater(() -> gameView.setVisible(true));
 
-        movePlayer(list, players.get(0), 5);
-        movePlayer(list, players.get(0), 5);
-        movePlayer(list, players.get(1), 4);
-        movePlayer(list, players.get(2), 3);
+        System.out.println("Game started");
 
-
-        list.ShowAllPlayerPostion();
     }
 
 
