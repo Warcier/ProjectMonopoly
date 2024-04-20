@@ -19,7 +19,7 @@ public class Property {
     }
 
     public int getRentPrice() {
-        return this.landPrice % 10;
+        return (int) (this.landPrice * 0.1);
     }
 
 

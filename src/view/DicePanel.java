@@ -29,7 +29,9 @@ public class DicePanel extends javax.swing.JPanel {
         super.paintComponent(g);
         g.setColor(Color.BLACK);
         
-        if(faceValue == 1) {
+        if (faceValue == 0){
+            return;
+        }else if(faceValue == 1) {
             g.fillOval(getWidth()/2 - 5/2, getHeight()/2 - 5/2, 5, 5);
         } else if(faceValue == 2) {
             g.fillOval(getWidth()/2 - 15, getHeight()/2 + 10, 5, 5);
@@ -63,6 +65,6 @@ public class DicePanel extends javax.swing.JPanel {
     public void getDiceFace(int faceValue){
         // draw dice
         this.faceValue = faceValue;
-        repaint();
+        this.repaint();
     }
 }

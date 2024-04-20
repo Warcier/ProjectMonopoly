@@ -43,4 +43,8 @@ public class Player {
         this.ownProperty.add(property);
     }
 
+    public void deleteCash(int amount){
+        this.cash = this.cash - amount;
+    }
+
 }

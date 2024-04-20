@@ -112,7 +112,6 @@ public class SlotSquare extends javax.swing.JLayeredPane{
         
     }
 
-
     private JLabel setupLabel(String text, int rotationDegrees) {
         // set the label to display the slot name and price in the slot panel
         JLabel label = new JLabel(text) {
@@ -150,9 +149,9 @@ public class SlotSquare extends javax.swing.JLayeredPane{
     private void displayDetails(){
         // Dialog for display slot information
         Node slot = null;
-        if (controller.getBoard() != null) {
-            slot = controller.getBoard().getNode(slotNum);
-        }
+        controller.getBoard();
+        slot = controller.getBoard().getNode(slotNum);
+ 
         JDialog detailDialog = new JDialog();
         detailDialog.setTitle("Slot "+ slotNum+ " Details");
         detailDialog.setSize(300, 200);
@@ -189,7 +188,7 @@ public class SlotSquare extends javax.swing.JLayeredPane{
         if (slot == null||slot.getOwner() == null) {
             detailSlotOwner.setText("Ower: NA");
         }else{
-            detailSlotOwner.setText("Ower:" + slot.getOwner());}
+            detailSlotOwner.setText("Ower:" + slot.getOwner().getName());}
 
          // Pushes all items to the center
         dialogPanel.add(Box.createVerticalGlue());

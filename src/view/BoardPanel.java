@@ -48,7 +48,6 @@ public class BoardPanel extends javax.swing.JLayeredPane {
         squareHeight = (int) Math.round(PANEL_HEIGHT /SQUARES_PER_SIDE);
  
         // add slot square to board
-        initializeSquares();
         initializeMonoLabel(200,220);
     }
 
@@ -57,12 +56,10 @@ public class BoardPanel extends javax.swing.JLayeredPane {
     }
 
 
-
-    private void initializeSquares() {
+    public void initializeSquares() {
         // creating slots on the game board
         for (int slotNum = 0; slotNum < SQUARE_COUNT; slotNum++) {
             int xCoordSquare = 0, yCoordSquare = 0;
-
             // Top row
             if (slotNum < 7) { 
                 xCoordSquare = slotNum * squareWidth;
@@ -81,7 +78,6 @@ public class BoardPanel extends javax.swing.JLayeredPane {
             else { 
                 yCoordSquare = (6 - (slotNum - 18)) * squareHeight;
             }
-
             // Store coordinates in arrays
             squareXCoord[slotNum] = xCoordSquare;
             squareYCoord[slotNum] = yCoordSquare;
@@ -143,24 +139,18 @@ public class BoardPanel extends javax.swing.JLayeredPane {
             System.out.println(" Error Player not found.");
             return;
         }
-
         int playerNum = 0;
-
-        if ("Player 1".equals(player.getName())) {
-            playerNum = 0;
-        }else if ("Player 2".equals(player.getName())) {
-            playerNum = 1;
-        }else if ("Player 3".equals(player.getName())) {
-            playerNum = 2;
-        }else if ("Player 4".equals(player.getName())) {
-            playerNum = 3;
-        }else{
-            System.out.println("Invaild Player");
+        switch (player.getName()) {
+            case "Player 1": playerNum = 0; break;
+            case "Player 2": playerNum = 1; break;
+            case "Player 3": playerNum = 2; break;
+            case "Player 4": playerNum = 3; break;
+            default:
+                System.out.println("Invalid Player");
+                return;
         }
-
-
+        
         Node playerNode = gameController.findPlayerNode(player);
-
         if (playerNode == null) {
             System.out.println("Player not found in the board");
             return;
@@ -174,13 +164,30 @@ public class BoardPanel extends javax.swing.JLayeredPane {
         }else if (slotNum > SQUARE_COUNT) {
             GameView.showGameMessage("Player pass the GO PASS, get 200 cash");
         }
-    
         // Calculate new positions for the chess based on the player number to avoid overlap
-        int xOffset = 10 + (playerNum % 2) * 15; // Offset x by 15 pixels per player in the same row
-        int yOffset = 5 + (playerNum / 2) * 20; // Offset y by 20 pixels per player in the same column
+        int xOffset = 10 + (playerNum % 2) * 15; 
+        int yOffset = 5 + (playerNum / 2) * 20; 
     
         // Set the new bounds for the player's chess label
         playerChess[playerNum].setBounds(squareXCoord[slotNum] + xOffset, squareYCoord[slotNum] + yOffset, 20, 20);
+        // repaint the slot to avoid slot name be cover
+        this.setComponentZOrder(playerChess[playerNum], 0); 
+        this.repaint(); 
     }
-
+    public void removePlayerOnBoard(Player bankruptPlayer){
+        // Remove player from the board
+        int playerNum = 0;
+        switch (bankruptPlayer.getName()) {
+            case "Player 1": playerNum = 0; break;
+            case "Player 2": playerNum = 1; break;
+            case "Player 3": playerNum = 2; break;
+            case "Player 4": playerNum = 3; break;
+            default:
+                System.out.println("Invalid Player");
+                return;
+        }
+        this.remove(playerChess[playerNum]);
+        this.revalidate();
+        this.repaint();
+    }
 }
