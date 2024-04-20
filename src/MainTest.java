@@ -10,13 +10,21 @@ public class MainTest {
         board.createBoard();
 
         board.movePlayerToNextNode(turnController.getCurrentPlayer(), 1);
+        turnController.nextTurn();
         board.movePlayerToNextNode(turnController.getCurrentPlayer(), 2);
+        turnController.nextTurn();
         board.movePlayerToNextNode(turnController.getCurrentPlayer(), 3);
+        turnController.nextTurn();
         board.movePlayerToNextNode(turnController.getCurrentPlayer(), 4);
+        turnController.nextTurn();
         board.movePlayerToNextNode(turnController.getCurrentPlayer(), 1);
+        turnController.nextTurn();
         board.movePlayerToNextNode(turnController.getCurrentPlayer(), 2);
+        turnController.nextTurn();
         board.movePlayerToNextNode(turnController.getCurrentPlayer(), 3);
+        turnController.nextTurn();
         board.movePlayerToNextNode(turnController.getCurrentPlayer(), 4);
+
 
         board.ShowAllPlayerPostion();
 

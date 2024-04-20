@@ -48,9 +48,10 @@ public class CircularLinkedList {
             newNode.setSlot(i);
             if (head == null) {
                 head = newNode;
-                head.playersOnThisLand = players;
                 tail = newNode;
+                head.playersOnThisLand.addAll(players);
                 head.next = head;
+
             } else {
                 tail.next = newNode;
                 tail = newNode;
