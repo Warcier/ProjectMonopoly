@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
@@ -9,6 +10,8 @@ public class Player {
     private List<Property> ownProperty;
 
     public Player(String name){
+        this.ownProperty = new ArrayList<>();
+        this.cash = 15000;
         this.name = name;
     }
 
@@ -28,8 +31,20 @@ public class Player {
         this.isBankrupt = true;
     }
 
-    public void setCash(int amount){
+    public void setBankrupt(boolean isBankrupt){
+        this.isBankrupt = isBankrupt;
+    }
+
+    public void addCash(int amount){
         this.cash = this.cash + amount;
+    }
+
+    public void deductCash(int amount){
+        this.cash = this.cash - amount;
+    }
+
+    public void setCash(int amount){
+        this.cash = amount;
     }
 
     public List<Property> getPlayerProperty(){
@@ -40,7 +55,4 @@ public class Player {
         this.ownProperty.add(property);
     }
 
-    public void clearProperty(){
-        this.ownProperty.clear();
-    }
 }
