@@ -2,6 +2,7 @@ import controller.GameController;
 import model.GameModel;
 import model.test;
 import view.GameView;
+import view.GameEditor;
 
 public class Main {
 
@@ -19,6 +20,7 @@ public class Main {
         gameView.setGameBoardController(gameController);
         gameView.setPlayerPanelController(gameController);
         gameModel.setGameController(gameController);
+        gameController.setGameEditor(new GameEditor(gameModel, gameController));
 
         if (gameModel.getBoard() == null) {
             gameModel.createBoard();

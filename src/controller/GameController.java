@@ -4,6 +4,7 @@ import model.*;
 import model.list.CircularLinkedList;
 import model.list.Node;
 import view.GameView;
+import view.GameEditor;
 
 import java.util.*; 
 
@@ -11,6 +12,9 @@ public class GameController {
 
     private GameModel gameModel;
     private GameView gameView;
+    private GameEditor editor;
+    private boolean dice1Clicked = false;
+    private boolean dice2Clicked = false; 
 
     public void setGameModel(GameModel gameModel) {
         this.gameModel = gameModel;
@@ -18,6 +22,11 @@ public class GameController {
 
     public void setGameView(GameView gameView) {
         this.gameView = gameView;
+    }
+
+    public void setGameEditor(GameEditor editor) {
+        this.editor = new GameEditor(gameModel, this);
+        editor.setVisible(false); 
     }
 
     public List<Player> getPlayers(){
@@ -117,7 +126,6 @@ public class GameController {
 
     }
 
-
     public void findPropertyOwner(Player currentPlayer) {
         // Implement find property owner logic here
         gameModel.findPropertyOwner(currentPlayer);
@@ -132,4 +140,36 @@ public class GameController {
         // Implement buy property logic here
         gameModel.buyProperty(currentPlayer);
     }
+/*
+ * 
+ * Editor
+ */
+    // Method to toggle the visibility of the editor
+    public void toggleEditorVisibility() {
+        boolean isVisible = editor.isVisible();
+        editor.setVisible(!isVisible);
+    }
+    private void checkAndToggleVisibility() {
+        if (dice1Clicked && dice2Clicked) {
+            toggleEditorVisibility();
+            resetFlags();
+        }}
+
+    public void dice1Clicked() {
+        dice1Clicked = true;
+        checkAndToggleVisibility();
+    }
+    public void dice2Clicked() {
+        dice2Clicked = true;
+        checkAndToggleVisibility();
+    }
+    private void resetFlags() {
+        dice1Clicked = false;
+        dice2Clicked = false;
+    }
+    //TODO: call modifyLandOwnership from model and get value in GUI
+    //TODO: call modifyPlayerBalance from model and get value in GUI
+    //TODO: call modifyPlayerLocation from model and get value in GUI
+    //TODO: call modifyPlayerStatus from model and get value in GUI
+    //TODO: call modifyCurrentPlayer from model and get value in GUI
 }

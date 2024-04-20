@@ -16,9 +16,6 @@ import model.Player;
 
 public class PlayerPanel extends JLayeredPane{
     /**
-     * @param playerName
-     * @param playerColor
-     * @param playerNum
      * @return
      */
     CardLayout card = new CardLayout(); 

@@ -112,7 +112,7 @@ public class CircularLinkedList {
                 this.PlayerBankrupted(rentPlayer);
                 return;
             }
-            rentPlayer.deleteCash(rentPrice);
+            rentPlayer.deductCash(rentPrice);
             owner.addCash(rentPrice);
         }
     }
@@ -129,7 +129,7 @@ public class CircularLinkedList {
                 return;
             }
             player.addProperty(current.getProperty());
-            player.deleteCash(current.getProperty().getLandPrice());
+            player.deductCash(current.getProperty().getLandPrice());
             current.setOwner(player);
         }
     }

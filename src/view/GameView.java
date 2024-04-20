@@ -245,9 +245,20 @@ public class GameView extends javax.swing.JFrame {
 
         // Dice 1
         dice1 = new DicePanel(320,350,50,50);
+        // dice1 click 
+        dice1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                gameController.dice1Clicked();            }
+        });
         //Dice 2
         dice2 = new DicePanel(520,350,50,50);
-        
+        dice2.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                gameController.dice2Clicked();            }
+        });
+
         // add to main frame
         getContentPane().add(gameLog);
         getContentPane().add(startGameBut);
