@@ -8,39 +8,32 @@ import java.util.List;
 
 public class Node {
 
-    private int slot;
+    private int block;
     private Player owner;
     private Property property;
-    List<Player> playersOnThisLand;
+    List<Player> playersOnThisLand = new ArrayList<Player>();
+
 
     Node next;
-
     public Node() {
+        this.block = 1;
         this.playersOnThisLand = new ArrayList<>();
     }
 
-    public Player getOwner() {
-        return owner;
-    }
-
-    public void setOwner(Player owner) {
-        this.owner = owner;
+    public void getOwner() {
+        System.out.println(owner.getName());
     }
 
     public Property getProperty() {
         return property;
     }
 
-    public void setProperty(Property property) {
-        this.property = property;
+    public void addPlayer(Player player) {
+        playersOnThisLand.add(player);
     }
 
-    public int getSlot() {
-        return slot;
-    }
-
-    public void setSlot(int slot) {
-        this.slot = slot;
+    public void removePlayer(Player player) {
+        playersOnThisLand.remove(player);
     }
 
     public void getIndex(Player player) {

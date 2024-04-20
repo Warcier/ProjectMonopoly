@@ -3,33 +3,15 @@ package model;
 import java.util.List;
 
 public class Player {
-    private String name;
-    private boolean isBankrupt;
-    private int cash;
+    private String Name;
     private List<Property> ownProperty;
 
     public Player(String name){
-        this.name = name;
+        this.Name = name;
     }
 
     public String getName(){
-        return name;
-    }
-
-    public int getCash(){
-        return cash;
-    }
-
-    public boolean isBankrupt(){
-        return isBankrupt;
-    }
-
-    public void playerBankrupted() {
-        this.isBankrupt = true;
-    }
-
-    public void setCash(int amount){
-        this.cash = this.cash + amount;
+        return Name;
     }
 
     public List<Property> getPlayerProperty(){

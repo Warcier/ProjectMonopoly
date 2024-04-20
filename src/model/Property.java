@@ -1,26 +1,14 @@
 package model;
 
 public class Property {
-    private final String landName;
-    private final int landPrice;
+    String name;
 
-    public Property(String slotName, int landPrice) {
-        this.landName = slotName;
-        this.landPrice = landPrice;
+    public Property(String name) {
+        this.name = name;
     }
 
-
-    public String getLandName() {
-        return landName;
+    public String getName() {
+        return name;
     }
-
-    public int getLandPrice() {
-        return landPrice;
-    }
-
-    public int getRentPrice() {
-        return this.landPrice % 10;
-    }
-
-
+    
 }

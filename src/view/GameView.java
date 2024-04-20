@@ -5,15 +5,13 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-import controller.GameController;
 import view.DicePanel;
 import view.BoardPanel;
 import view.SlotSquare;
 import view.PlayerPanel;
 
 public class GameView extends javax.swing.JFrame {
-
-    GameController gameController;
+    
     private BoardPanel gameBoard;
     private PlayerPanel gamePlayer;
     private JTextArea logText;
@@ -140,9 +138,5 @@ public class GameView extends javax.swing.JFrame {
                 new GameView().setVisible(true);
             }
         });
-    }
-
-    public void setGameController(GameController gameController) {
-        this.gameController = gameController;
     }
 }
