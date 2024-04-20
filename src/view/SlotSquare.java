@@ -151,7 +151,7 @@ public class SlotSquare extends javax.swing.JLayeredPane{
         // Dialog for display slot information
         Node slot = null;
         if (controller.getBoard() != null) {
-            slot = controller.getBoard().getNode(slotNum);
+            slot = controller.getBoard().getSlot(slotNum);
         }
         JDialog detailDialog = new JDialog();
         detailDialog.setTitle("Slot "+ slotNum+ " Details");

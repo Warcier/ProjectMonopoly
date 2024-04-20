@@ -216,7 +216,7 @@ public class CircularLinkedList {
         return null;
     }
 
-    public Node getNode(int num) {
+    public Node getSlot(int num) {
         // find Node
         if (head == null || num < 0) {
             return null; 
