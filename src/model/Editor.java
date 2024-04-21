@@ -41,6 +41,7 @@ public class Editor {
     // Modify the status of a player (active or bankrupt)
     public void modifyPlayerStatus(Player player, boolean isBankrupt) {
         player.setBankrupt(isBankrupt);
+        board.removeBankruptPlayerProperties(player);
     }
 
     // Modify who’s turn is it to move.

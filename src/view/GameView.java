@@ -226,6 +226,7 @@ public class GameView extends javax.swing.JFrame {
                     // if yes show message
                     showGameMessage(currentPlayer.getName()+" is bankrupt");
                     addPlayerTakenAction(currentPlayer, "Bankrupt ! ! !");
+                    gameController.getBoard().removeBankruptPlayerProperties(currentPlayer);
                     gameBoard.removePlayerOnBoard(currentPlayer);
                     showGameMessage(currentPlayer.getName()+" is remove from the game");                 
                 }else{
