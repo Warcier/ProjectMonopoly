@@ -21,8 +21,8 @@ public class Editor {
     }
 
     // Modify the balance of a player
-    public void modifyPlayerBalance(Player player, int newBalance) {
-        player.setCash(newBalance);
+    public void modifyPlayerBalance(Player player, int newBalance)  {
+        player.addCash(newBalance);
     }
 
     // Modify the location of a player

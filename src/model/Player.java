@@ -7,6 +7,7 @@ public class Player {
     private String name;
     private boolean isBankrupt;
     private int cash;
+    boolean passedGo = false;
     private List<Property> ownProperty;
 
     public Player(String name){
@@ -39,6 +40,13 @@ public class Player {
         this.cash = this.cash + amount;
     }
 
+    public boolean getPassedGo(){
+        return passedGo;
+    }
+
+    public void setPassedGo(boolean passedGo){
+        this.passedGo = passedGo;
+    }
     public void deductCash(int amount){
         this.cash = this.cash - amount;
     }

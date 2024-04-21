@@ -19,7 +19,7 @@ public class test {
         // Implement property initialization here
         List<Property> properties = new ArrayList<>();
 
-        properties.add(new Property("GO", 1500));
+        properties.add(new Property("GO", 0));
         properties.add(new Property("Wanchai", 1200));
         properties.add(new Property("Ping Chau", 3000));
         properties.add(new Property("Tai O", 4000));

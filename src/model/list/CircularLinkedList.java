@@ -170,7 +170,9 @@ public class CircularLinkedList {
         for (int i = 0; i < diceNumber; i++) {
             nextNode = nextNode.next;
             if (nextNode == head) {
+                System.out.println("Player has passed GO!");
                 giveBonusGO(movingPlayer);
+                movingPlayer.setPassedGo(true);
             }
         }
 
@@ -192,7 +194,7 @@ public class CircularLinkedList {
                     System.out.println("Player: " + player.getName());
                 }
             }
-            System.out.printf("--------------------\n");
+            System.out.print("--------------------\n");
             current = current.next;
         } while (current != head);
     }
@@ -233,6 +235,17 @@ public class CircularLinkedList {
         } while (current != head); 
     
         return null; 
+    }
+
+    // For Editor Function
+    //Find Player using the name by pasing in String parameter
+    public Player findPlayer(String name){
+        for (Player player : players) {
+            if (player.getName().equals(name)) {
+                return player;
+            }
+        }
+        return null;
     }
 
 }

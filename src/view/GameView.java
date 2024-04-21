@@ -200,6 +200,11 @@ public class GameView extends javax.swing.JFrame {
                 updateBoard();
                 // update player position in the view
                 gameBoard.movePlayerChess(currentPlayer);
+                if (currentPlayer.getPassedGo()){
+                    showGameMessage(currentPlayer.getName()+" has passed GO and get bonus");
+                    addPlayerTakenAction(currentPlayer,"Passed GO and get $2000 bonus");
+                    currentPlayer.setPassedGo(false);
+                }
                 // check if Buy or Rent after moving to new node
                 Node node = gameController.findPlayerNode(currentPlayer);
                 // if node owner not null pay rent to the owner
@@ -239,7 +244,9 @@ public class GameView extends javax.swing.JFrame {
                     gameController.updateViewBoard();
                     rollDiceBut.setEnabled(false);
                     nextPlayerBut.setEnabled(true); 
-                }           
+                }
+
+                gameController.ShowAllPlayerNode();
             }});
             rollDiceBut.setEnabled(false);
 

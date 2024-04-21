@@ -51,16 +51,14 @@ public class GameModel {
     // TURN LOGIC
     public void endTurn() {
         turnController.nextTurn();
-        // Other end turn logic...
     }
 
     public Player checkWinCondition() {
-        // Implement check win condition logic here
+
         return board.checkWinCondition();
     }
 
     public Player getCurrPlayer(){
-        //get current Player
         return turnController.getCurrentPlayer();
     }
 

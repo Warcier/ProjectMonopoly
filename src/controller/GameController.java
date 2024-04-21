@@ -168,8 +168,23 @@ public class GameController {
         dice2Clicked = false;
     }
     //TODO: call modifyLandOwnership from model and get value in GUI
+    public void changeOwnerBut(int slot, Player newOwner) {
+        gameModel.getEditor().modifyLandOwnership(slot, newOwner);
+    }
     //TODO: call modifyPlayerBalance from model and get value in GUI
+    public void changeBalanceBut(Player player, int newBalance) {
+        gameModel.getEditor().modifyPlayerBalance(player, newBalance);
+    }
     //TODO: call modifyPlayerLocation from model and get value in GUI
+    public void changeLocationBut(Player player, int newLocation) {
+        gameModel.getEditor().modifyPlayerLocation(player, newLocation);
+    }
     //TODO: call modifyPlayerStatus from model and get value in GUI
+    public void changeStatusBut(Player player, boolean isBankrupt) {
+        gameModel.getEditor().modifyPlayerStatus(player, isBankrupt);
+    }
     //TODO: call modifyCurrentPlayer from model and get value in GUI
+    public void changeCurrentPlayerBut(Player newCurrentPlayer) {
+        gameModel.getEditor().modifyCurrentPlayer(newCurrentPlayer);
+    }
 }

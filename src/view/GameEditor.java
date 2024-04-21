@@ -26,7 +26,7 @@ public class GameEditor extends JFrame{
 
     public void initializeUI(){
         setTitle("Game Editor");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setLayout(null);
 
@@ -65,8 +65,9 @@ public class GameEditor extends JFrame{
 			@Override
             // TODO: changeOwnerBut logic
 			public void actionPerformed(ActionEvent e) {
-
-            
+                Player player = model.getBoard().findPlayer(ownerPlayerField.getText());
+                int slot = Integer.parseInt(ownerSloTField.getText());
+                controller.changeOwnerBut(slot, player);
             }});
 
         // give cash
@@ -99,8 +100,10 @@ public class GameEditor extends JFrame{
 			@Override
             // TODO: giveCash logic
 			public void actionPerformed(ActionEvent e) {
+                Player player = model.getBoard().findPlayer(cashPlayerField.getText());
+                int amount = Integer.parseInt(amountField.getText());
+                controller.changeBalanceBut(player, amount);
 
-                return;
             }});
 
         // move player to other slot
@@ -133,8 +136,9 @@ public class GameEditor extends JFrame{
 			@Override
             // TODO: movePlayerBut logic
 			public void actionPerformed(ActionEvent e) {
-
-                return;
+                Player player = model.getBoard().findPlayer(movePlayerField.getText());
+                int slot = Integer.parseInt(moveSlotField.getText());
+                controller.changeLocationBut(player, slot);
             }});
         
         // change player status
@@ -167,8 +171,9 @@ public class GameEditor extends JFrame{
 			@Override
             // TODO: statusBut logic
 			public void actionPerformed(ActionEvent e) {
-
-                return;
+                Player player = model.getBoard().findPlayer(statusPlayerField.getText());
+                boolean isBankrupt = Boolean.parseBoolean(statusField.getText());
+                controller.changeStatusBut(player, isBankrupt);
             }});
 
         // Change next turn player
@@ -193,7 +198,12 @@ public class GameEditor extends JFrame{
 			@Override
             // TODO: nextPlayerBut logic
 			public void actionPerformed(ActionEvent e) {
-
+                Player player = model.getBoard().findPlayer(nextPlayerField.getText());
+                if (player == null) {
+                    System.out.println("Player not found");
+                    return;
+                }
+                controller.changeCurrentPlayerBut(player);
                 return;
             }});
 
