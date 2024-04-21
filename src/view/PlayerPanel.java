@@ -95,7 +95,7 @@ public class PlayerPanel extends JLayeredPane{
         playerTakeActionJLabel.setFont(new Font("Arial", Font.BOLD, 18));
         playerTakeActionJLabel.setHorizontalAlignment(SwingConstants.CENTER);
         playerTakeActionJLabel.setVerticalAlignment(SwingConstants.CENTER); 
-        playerTakeActionJLabel.setBounds(150, panelHeight-45, 200, 40);
+        playerTakeActionJLabel.setBounds(150, panelHeight-45, 230, 40);
         playerPanel.add(playerTakeActionJLabel);
 
         // Add the panel to the card layout with a unique identifier
@@ -165,6 +165,7 @@ public class PlayerPanel extends JLayeredPane{
         }
         card.show(this, ""+(playerNum));
         updatePlayerInfoArea(changePlayer);
+        resetActionLabel(playerNum);
         GameView.showGameMessage("Change to "+changePlayer.getName()+" trun.");
     }
 
@@ -195,5 +196,10 @@ public class PlayerPanel extends JLayeredPane{
         }
         playerTakeAction.setText(action);
     }
-    
+    private void resetActionLabel(int playerNum){
+        // reset the action label to "" when start a new round
+        JLayeredPane currentPlayerPanel = playerPanels[playerNum-1];
+        JLabel playerTakeAction = (JLabel) currentPlayerPanel.getComponent(3);
+        playerTakeAction.setText("");
+    }
 }

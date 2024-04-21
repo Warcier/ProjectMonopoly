@@ -70,6 +70,8 @@ public class GameView extends javax.swing.JFrame {
         // Game log
         logText = new JTextArea();
 	    logText.setFont(new Font("Arial", Font.PLAIN, 12));
+        logText.setLineWrap(true);
+        logText.setWrapStyleWord(true);
         gameLog = new JScrollPane(logText);
         gameLog.setBounds(950,370,400,200);
         gameLog.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -179,13 +181,18 @@ public class GameView extends javax.swing.JFrame {
                 Node node = gameController.findPlayerNode(currentPlayer);
                 // if node owner not null pay rent to the owner
                 if (node.getOwner() != null) {
-                    showGameMessage("Player "+currentPlayer.getName()+" has to pay rent to "+node.getOwner().getName());
-                    addPlayerTakenAction(currentPlayer,"Pay Rent to "+node.getOwner().getName());
-                    gameController.payRent(currentPlayer, node);
+                    if (node.getOwner().getName().equals(currentPlayer.getName())) {
+                        showGameMessage(currentPlayer.getName()+" has land on his own property (" + node.getProperty().getLandName()+")");
+                        addPlayerTakenAction(currentPlayer,"Land on Own Property");
+                    }else{
+                        showGameMessage(currentPlayer.getName()+" has to pay rent to "+node.getOwner().getName());
+                        addPlayerTakenAction(currentPlayer,"Pay Rent to "+node.getOwner().getName());
+                        gameController.payRent(currentPlayer, node);
+                    }
                 }
                 // if node owner is null Buy the node
                 if (node.getOwner() == null) {
-                    showGameMessage("Player "+currentPlayer.getName()+" bought the property");
+                    showGameMessage(currentPlayer.getName()+" bought the property");
                     addPlayerTakenAction(currentPlayer,"Buy "+node.getProperty().getLandName());
                     gameController.buyProperty(currentPlayer);                   
                 }
@@ -261,6 +268,7 @@ public class GameView extends javax.swing.JFrame {
         // player bankrupt logic
         showGameMessage(player.getName()+" is bankrupt");
         addPlayerTakenAction(player, "Bankrupt ! ! !");
+        gameController.getBoard().removeBankruptPlayerProperties(currentPlayer);
         gameBoard.removePlayerOnBoard(player);
         showGameMessage(player.getName()+" is remove from the game");  
     }
