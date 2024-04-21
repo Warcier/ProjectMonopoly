@@ -181,6 +181,16 @@ public class CircularLinkedList {
 
     }
 
+    public void removeBankruptPlayerProperties(Player bankruptPlayer) {
+        Node current = head;
+        do {
+            if (current.getOwner() == bankruptPlayer) {
+                current.setOwner(null);
+            }
+            current = current.next;
+        } while (current != head);
+    }
+
 
     /**
      * Show all player position
