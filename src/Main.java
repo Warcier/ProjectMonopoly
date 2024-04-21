@@ -20,7 +20,7 @@ public class Main {
         gameView.setGameBoardController(gameController);
         gameView.setPlayerPanelController(gameController);
         gameModel.setGameController(gameController);
-        gameController.setGameEditor(new GameEditor(gameModel, gameController));
+        gameController.setGameEditor(new GameEditor(gameController));
 
         if (gameModel.getBoard() == null) {
             gameModel.createBoard();

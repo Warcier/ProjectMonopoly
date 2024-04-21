@@ -7,6 +7,8 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 
 import java.util.List;
+import java.util.Observer;
+import java.util.Observable;
 import java.util.stream.Collectors;
 
 import controller.GameController;
@@ -50,8 +52,6 @@ public class PlayerPanel extends JLayeredPane{
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
     }
-
-
 
     // create the player information display panel
     private JLayeredPane createPlayerPanel(int panelWidth,int panelHeight,String playerName,Color playerColor, int playerNum){
@@ -116,10 +116,12 @@ public class PlayerPanel extends JLayeredPane{
             playerInfoArea.setText("Current Cash: "+ player.getCash()+"\n");
             // Display player status
             playerInfoArea.append("Status: "+ (player.isBankrupt() ? "Bankrupt" : "Active") +"\n");
-            // Display player current position
-            playerInfoArea.append("Position: "+ gameController.findPlayerNode(player).getProperty().getLandName()+"\n");
-            // Display player current Property
-            playerInfoArea.append("Own Property: "+propertiesToString(player.getPlayerProperty())+"\n");
+            if (!player.isBankrupt()) {
+                // Display player current position
+                playerInfoArea.append("Position: "+ gameController.findPlayerNode(player).getProperty().getLandName()+"\n");
+                // Display player current Property
+                playerInfoArea.append("Own Property: "+propertiesToString(player.getPlayerProperty())+"\n");
+            }
         }
     }
 

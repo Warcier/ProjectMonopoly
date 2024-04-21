@@ -84,6 +84,8 @@ public class BoardPanel extends javax.swing.JLayeredPane {
 
             squares[slotNum] = new SlotSquare(xCoordSquare, yCoordSquare, squareWidth, squareHeight, slotNum, rotationAngles[slotNum], gameController);
             this.add(squares[slotNum],PALETTE_LAYER);
+            this.validate();
+            this.repaint();
         }
     }
 
@@ -160,10 +162,8 @@ public class BoardPanel extends javax.swing.JLayeredPane {
         if (slotNum < 0 ) {
             System.out.println("Invalid square number .");
             return;
-            // 
-        }else if (slotNum > SQUARE_COUNT) {
-            GameView.showGameMessage("Player pass the GO PASS, get 200 cash");
         }
+
         // Calculate new positions for the chess based on the player number to avoid overlap
         int xOffset = 10 + (playerNum % 2) * 15; 
         int yOffset = 5 + (playerNum / 2) * 20; 
@@ -186,8 +186,26 @@ public class BoardPanel extends javax.swing.JLayeredPane {
                 System.out.println("Invalid Player");
                 return;
         }
-        this.remove(playerChess[playerNum]);
-        this.revalidate();
+        playerChess[playerNum].setVisible(false);
+        this.validate();
         this.repaint();
+    }
+    public void addPlayerOnBoard(Player addPlayer){
+        // add player back to board
+        int playerNum = 0;
+        switch (addPlayer.getName()) {
+            case "Player 1": playerNum = 0; break;
+            case "Player 2": playerNum = 1; break;
+            case "Player 3": playerNum = 2; break;
+            case "Player 4": playerNum = 3; break;
+            default:
+                System.out.println("Invalid Player");
+                return;
+        }if (!playerChess[playerNum].isVisible()) {
+            playerChess[playerNum].setVisible(true);
+            this.setComponentZOrder(playerChess[playerNum], 0); 
+            this.revalidate();
+            this.repaint();
+        }
     }
 }

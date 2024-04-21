@@ -165,17 +165,17 @@ public class SlotSquare extends javax.swing.JLayeredPane{
         dialogPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         dialogPanel.setBackground(new Color(102,102,102));
 
-        JLabel detailSlotName = new JLabel("Slot Name: "+slotName);
+        JLabel detailSlotName = new JLabel("Slot Name: "+slot.getProperty().getLandName());
         detailSlotName.setAlignmentX(Component.CENTER_ALIGNMENT);
         detailSlotName.setFont(new Font("Arial", Font.BOLD, 14));
         detailSlotName.setForeground(Color.WHITE);
 
-        JLabel detailSlotPrice = new JLabel("Price: "+String.valueOf(slotPrice));    
+        JLabel detailSlotPrice = new JLabel("Price: "+slot.getProperty().getLandPrice());    
         detailSlotPrice.setAlignmentX(Component.CENTER_ALIGNMENT);
         detailSlotPrice.setFont(new Font("Arial", Font.BOLD, 14));
         detailSlotPrice.setForeground(Color.WHITE);
 
-        JLabel detailSlotRent = new JLabel("Rent Price: "+String.valueOf(Math.ceil(slotPrice*0.1 * 100)/100));
+        JLabel detailSlotRent = new JLabel("Rent Price: "+slot.getProperty().getRentPrice());
         detailSlotRent.setAlignmentX(Component.CENTER_ALIGNMENT);
         detailSlotRent.setFont(new Font("Arial", Font.BOLD, 14));
         detailSlotRent.setForeground(Color.WHITE);
