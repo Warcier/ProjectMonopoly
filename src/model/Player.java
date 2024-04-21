@@ -12,7 +12,7 @@ public class Player {
 
     public Player(String name){
         this.ownProperty = new ArrayList<>();
-        this.cash = 15000;
+        this.cash = 10000;
         this.name = name;
     }
 

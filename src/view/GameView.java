@@ -3,7 +3,9 @@ package view;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.util.List; 
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import controller.GameController;
 import model.Property;
@@ -81,7 +83,6 @@ public class GameView extends javax.swing.JFrame {
                 // Start Game Logic
                 // First setup the game board in the view
                 gameController.createBoard();
-                gameController.updateViewBoard();
                 setGameBoardController(gameController);
                 gamePlayer.startGame();
                 gameBoard.initPlayerChess();
@@ -119,24 +120,8 @@ public class GameView extends javax.swing.JFrame {
                     nextPlayer = gameController.getCurrentPlayer();
                 }while(nextPlayer.isBankrupt());
 
-                // update board to latest
-                gameController.updateViewBoard();
                 // track player status
-                if (!currentPlayer.isBankrupt()) {
-                    showGameMessage("\n"+currentPlayer.getName()+ "'s round end."+"\n"+
-                    "-----Status------"+"\n"+
-                    "Current Cash: " + currentPlayer.getCash()+"\n"+
-                    "Status: "+ (currentPlayer.isBankrupt() ? "Bankrupt" : "Active") +"\n"+
-                    "Own Property: "+(gamePlayer.propertiesToString(currentPlayer.getPlayerProperty()))+"\n"+
-                    "Position: "+ gameController.findPlayerNode(currentPlayer).getProperty().getLandName()+"\n"+
-                    "-----------------"+"\n"+
-                    "Next Player: " + nextPlayer.getName()+"\n"+
-                    "-----------------"+"\n");
-                }else{showGameMessage("\n"+"-----------------"+"\n"+
-                                    "Next Player: " + nextPlayer.getName()+"\n"+
-                                    "-----------------"+"\n");
-                }
-
+                trackPlayerMessage(currentPlayer);
                 // change player panel
                 gamePlayer.changePlayerPanel(nextPlayer);
                 // set player for next round
@@ -181,23 +166,8 @@ public class GameView extends javax.swing.JFrame {
                 showGameMessage("Roll Dice : "+ diceNumber);
 
                 // move player to next node in model
-                //First check if player is already bankrupted else skip
-                /**if (currentPlayer.isBankrupt()) {
-                    showGameMessage("Player "+currentPlayer.getName()+" is bankrupt");
-                    rollDiceBut.setEnabled(false);
-                    nextPlayerBut.setEnabled(true);
-                    return;
-
-                } else {
-                    gameController.moveCurrentPlayer(currentPlayer, diceNumber);                                    
-                    // update board to latest
-                    updateBoard();
-                    // update player position in the view
-                    gameBoard.movePlayerChess(currentPlayer);
-                }*/
                 gameController.moveCurrentPlayer(currentPlayer, diceNumber);                                    
-                // update board to latest
-                updateBoard();
+                
                 // update player position in the view
                 gameBoard.movePlayerChess(currentPlayer);
                 if (currentPlayer.getPassedGo()){
@@ -224,15 +194,9 @@ public class GameView extends javax.swing.JFrame {
                 // Check if the player is bankrupt after buy/pay rent
                 if (currentPlayer.isBankrupt()) {
                     // if yes show message
-                    showGameMessage(currentPlayer.getName()+" is bankrupt");
-                    addPlayerTakenAction(currentPlayer, "Bankrupt ! ! !");
-                    gameController.getBoard().removeBankruptPlayerProperties(currentPlayer);
-                    gameBoard.removePlayerOnBoard(currentPlayer);
-                    showGameMessage(currentPlayer.getName()+" is remove from the game");                 
-                }else{
-                    // if not update the textArea in playerPanel
-                    gamePlayer.updatePlayerInfoArea(currentPlayer);
-                }
+                    playerBankrupt(currentPlayer);
+                }               
+                gamePlayer.updatePlayerInfoArea(currentPlayer);
 
                 // check if game over
                 Player winner = gameController.checkWinCondition();
@@ -242,12 +206,11 @@ public class GameView extends javax.swing.JFrame {
                     rollDiceBut.setEnabled(false); 
                     winCondition(winner);
                 }else{
-                    gameController.updateViewBoard();
                     rollDiceBut.setEnabled(false);
                     nextPlayerBut.setEnabled(true); 
                 }
 
-                gameController.ShowAllPlayerNode();
+                //gameController.ShowAllPlayerNode();
             }});
             rollDiceBut.setEnabled(false);
 
@@ -272,11 +235,9 @@ public class GameView extends javax.swing.JFrame {
         getContentPane().add(startGameBut);
         getContentPane().add(nextPlayerBut);
         getContentPane().add(rollDiceBut);
-        //getContentPane().add(buyBut);
     
         pack();
-        this.setVisible(true);
-        
+        this.setVisible(true);      
     }
 
 
@@ -291,16 +252,34 @@ public class GameView extends javax.swing.JFrame {
 
     }
 
-    public void updateBoard() {
-        // update board on the view
-        this.board = gameController.getBoard();
-        this.players = gameController.getPlayers();
-        this.properties = gameController.getProperties();
-    }
-
     public void setCurrentPlayer(Player player){
         // update the current player of the round
         this.currentPlayer = player;    
+    }
+
+    private void playerBankrupt(Player player){
+        // player bankrupt logic
+        showGameMessage(player.getName()+" is bankrupt");
+        addPlayerTakenAction(player, "Bankrupt ! ! !");
+        gameBoard.removePlayerOnBoard(player);
+        showGameMessage(player.getName()+" is remove from the game");  
+    }
+
+    private void trackPlayerMessage(Player player){
+        if (!player.isBankrupt()) {
+            showGameMessage(player.getName()+ "'s round end."+"\n\n"+
+            "-----"+ player.getName()+" Status------"+"\n"+
+            "Current Cash: " + player.getCash()+"\n"+
+            "Status: "+ (player.isBankrupt() ? "Bankrupt" : "Active") +"\n"+
+            "Own Property: "+(gamePlayer.propertiesToString(player.getPlayerProperty()))+"\n"+
+            "Position: "+ gameController.findPlayerNode(player).getProperty().getLandName()+"\n"+
+            "-----------------"+"\n"+
+            "Next Player: " + nextPlayer.getName()+"\n"+
+            "-----------------"+"\n");
+        }else{showGameMessage("\n"+"-----------------"+"\n"+
+                            "Next Player: " + nextPlayer.getName()+"\n"+
+                            "-----------------"+"\n");
+        }
     }
 
    private void winCondition(Player winner){
@@ -309,10 +288,11 @@ public class GameView extends javax.swing.JFrame {
 
             JDialog gameOverDialog = new JDialog();
             gameOverDialog.setTitle("Game Over !!!");
-            gameOverDialog.setSize(500, 400);
-            gameOverDialog.setLocationRelativeTo(null);  // Centers the dialog over the parent frame
+            gameOverDialog.setSize(550, 400);
+            gameOverDialog.setLocationRelativeTo(null);  
             gameOverDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             gameOverDialog.setLayout(new BorderLayout());
+            gameOverDialog.setModalityType(Dialog.ModalityType.MODELESS);
     
             JPanel gameOverPanel = new JPanel();
             gameOverPanel.setLayout(new BoxLayout(gameOverPanel, BoxLayout.Y_AXIS));
@@ -323,14 +303,15 @@ public class GameView extends javax.swing.JFrame {
             gameOverLabel.setFont(new Font("Arial", Font.BOLD, 40));
             gameOverLabel.setForeground(Color.WHITE);
     
-            JLabel winPlayerJLabel = new JLabel(winner.getName() + " has won the game");
+            JLabel winPlayerJLabel = new JLabel(winner.getName() + " has won the game ! ! !");
             winPlayerJLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            winPlayerJLabel.setFont(new Font("Arial", Font.BOLD, 20));
+            winPlayerJLabel.setFont(new Font("Arial", Font.BOLD, 30));
             winPlayerJLabel.setForeground(Color.WHITE);
     
             // Adding vertical glue before and after labels to center them vertically
             gameOverPanel.add(Box.createVerticalGlue());  // Adds space at the top
             gameOverPanel.add(gameOverLabel);
+            gameOverPanel.add(Box.createVerticalStrut(30));
             gameOverPanel.add(winPlayerJLabel);
             gameOverPanel.add(Box.createVerticalGlue());  // Adds space at the bottom
     
@@ -338,4 +319,32 @@ public class GameView extends javax.swing.JFrame {
             gameOverDialog.setVisible(true);
         }
    }
+
+   public void updatePlayerInfo(Player player){
+    // update the playerInfo showing on the panel (editor)
+    if (player != null && player.getName().equals(currentPlayer.getName())) {
+        gamePlayer.updatePlayerInfoArea(player);
+        }
+    }
+
+    public void changeCurrentPlayer(Player player){
+        // update the playerInfo showing on the panel (editor)
+        if (player != null) {
+            setCurrentPlayer(player);
+            gamePlayer.changePlayerPanel(player);
+        }
+    }
+
+    public void changeStatus(Player player){
+        // change player status view logic (editor)
+        if (player.isBankrupt()) {
+            playerBankrupt(player);
+        }else{
+            gameBoard.addPlayerOnBoard(player);
+        }
+    }
+
+    public void movePlayerLoca(Player player){
+        gameBoard.movePlayerChess(player);
+    }
 }

@@ -25,7 +25,7 @@ public class GameController {
     }
 
     public void setGameEditor(GameEditor editor) {
-        this.editor = new GameEditor(gameModel, this);
+        this.editor = new GameEditor(this);
         editor.setVisible(false); 
     }
 
@@ -72,12 +72,6 @@ public class GameController {
         return gameModel.getBoard();
     }
 
-    // Fix later
-    public void updateViewBoard(){
-        // get slot details
-        gameView.updateBoard();
-    }
-
     public void createBoard(){
         // create board
         gameModel.createBoard();
@@ -86,20 +80,6 @@ public class GameController {
     public Node findPlayerNode(Player player){
         // find player node
         return gameModel.getBoard().findPlayerNode(player);
-    }
-
-    public List<Node> getPlayersNode(CircularLinkedList board){
-        // return a list of player current Node
-        List<Node> playersNode = new ArrayList<>();
-        for (int i=0; i < board.getPlayers().size();i++){
-            Player player = board.getPlayers().get(i);
-            if(player == null || !player.isBankrupt()){
-                playersNode.add(i, null);
-                continue;
-            }
-            playersNode.add(i, board.findPlayerNode(player));
-        }
-        return playersNode;
     }
 
     public Player getCurrentPlayerToView(){
@@ -170,21 +150,41 @@ public class GameController {
     //TODO: call modifyLandOwnership from model and get value in GUI
     public void changeOwnerBut(int slot, Player newOwner) {
         gameModel.getEditor().modifyLandOwnership(slot, newOwner);
+        updateViewPlayerInfo(newOwner);
+        
     }
     //TODO: call modifyPlayerBalance from model and get value in GUI
     public void changeBalanceBut(Player player, int newBalance) {
         gameModel.getEditor().modifyPlayerBalance(player, newBalance);
+        updateViewPlayerInfo(player);
     }
     //TODO: call modifyPlayerLocation from model and get value in GUI
     public void changeLocationBut(Player player, int newLocation) {
         gameModel.getEditor().modifyPlayerLocation(player, newLocation);
+        gameView.movePlayerLoca(player);
+        updateViewPlayerInfo(player);
     }
     //TODO: call modifyPlayerStatus from model and get value in GUI
     public void changeStatusBut(Player player, boolean isBankrupt) {
         gameModel.getEditor().modifyPlayerStatus(player, isBankrupt);
+        gameView.changeStatus(player);
+        updateViewPlayerInfo(player);
     }
     //TODO: call modifyCurrentPlayer from model and get value in GUI
     public void changeCurrentPlayerBut(Player newCurrentPlayer) {
         gameModel.getEditor().modifyCurrentPlayer(newCurrentPlayer);
+        changeCurrPlayer(newCurrentPlayer);
     }
+
+    public void updateViewPlayerInfo(Player player){
+        // update player information show on board
+        gameView.updatePlayerInfo(player);
+    }
+
+    private void changeCurrPlayer(Player player){
+        // change current player 
+        gameView.changeCurrentPlayer(player);
+    }
+
+
 }
