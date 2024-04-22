@@ -4,8 +4,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import controller.GameController;
 import model.Property;
@@ -32,8 +30,7 @@ public class GameView extends javax.swing.JFrame {
     private boolean winCondition = false;
     private Player winner;
     private CircularLinkedList board;
-    private List<Player> players;
-    private List<Property> properties;
+ 
 
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
@@ -130,7 +127,6 @@ public class GameView extends javax.swing.JFrame {
                 setCurrentPlayer(nextPlayer);
 
                 rollDiceBut.setEnabled(true);
-                //buyBut.setEnabled(false);
                 nextPlayerBut.setEnabled(false);
             }});
 
@@ -150,7 +146,6 @@ public class GameView extends javax.swing.JFrame {
                 if (diceNumber == 0) {
                     showGameMessage("ERROR in roll dice, please roll again");
                     rollDiceBut.setEnabled(true);
-                    //buyBut.setEnabled(false);
                     nextPlayerBut.setEnabled(false);
                 }else if (diceNumber == 1) {
                     dice1.getDiceFace(1);
@@ -208,16 +203,11 @@ public class GameView extends javax.swing.JFrame {
                 // check if game over
                 Player winner = gameController.checkWinCondition();
                 if (winner != null) {
-                    winCondition = true;
-                    nextPlayerBut.setEnabled(false);
-                    rollDiceBut.setEnabled(false); 
                     winCondition(winner);
                 }else{
                     rollDiceBut.setEnabled(false);
                     nextPlayerBut.setEnabled(true); 
                 }
-
-                //gameController.ShowAllPlayerNode();
             }});
             rollDiceBut.setEnabled(false);
 
@@ -274,25 +264,33 @@ public class GameView extends javax.swing.JFrame {
     }
 
     private void trackPlayerMessage(Player player){
+        // Check if the player is not bankrupt
         if (!player.isBankrupt()) {
-            showGameMessage(player.getName()+ "'s round end."+"\n\n"+
-            "-----"+ player.getName()+" Status------"+"\n"+
-            "Current Cash: " + player.getCash()+"\n"+
-            "Status: "+ (player.isBankrupt() ? "Bankrupt" : "Active") +"\n"+
-            "Own Property: "+(gamePlayer.propertiesToString(player.getPlayerProperty()))+"\n"+
-            "Position: "+ gameController.findPlayerNode(player).getProperty().getLandName()+"\n"+
-            "-----------------"+"\n"+
-            "Next Player: " + nextPlayer.getName()+"\n"+
-            "-----------------"+"\n");
-        }else{showGameMessage("\n"+"-----------------"+"\n"+
-                            "Next Player: " + nextPlayer.getName()+"\n"+
-                            "-----------------"+"\n");
+            StringBuilder message = new StringBuilder();
+            message.append(player.getName() + "'s round end." + "\n\n" +
+                           "-----" + player.getName() + " Status------" + "\n" +
+                           "Current Cash: " + player.getCash() + "\n" +
+                           "Status: " + (player.isBankrupt() ? "Bankrupt" : "Active") + "\n");
+            String properties = player.getPlayerProperty() != null ? gamePlayer.propertiesToString(player.getPlayerProperty()) : "None";
+            message.append("Own Property: " + properties + "\n");
+            message.append("Position: " + gameController.findPlayerNode(player).getProperty().getLandName() + "\n" +
+                           "-----------------" + "\n" +
+                           "Next Player: " + nextPlayer.getName() + "\n" +
+                           "-----------------" + "\n");
+            showGameMessage(message.toString());
+        } else {
+            showGameMessage("\n" + "-----------------" + "\n" +
+                            "Next Player: " + nextPlayer.getName() + "\n" +
+                            "-----------------" + "\n");
         }
     }
 
    private void winCondition(Player winner){
         // game over dialog
         if (winner != null) {
+            winCondition = true;
+            this.nextPlayerBut.setEnabled(false);
+            this.rollDiceBut.setEnabled(false); 
 
             JDialog gameOverDialog = new JDialog();
             gameOverDialog.setTitle("Game Over !!!");
@@ -347,8 +345,25 @@ public class GameView extends javax.swing.JFrame {
         // change player status view logic (editor)
         if (player.isBankrupt()) {
             playerBankrupt(player);
+            // check game over
+            Player winner = gameController.checkWinCondition();
+            if (winner != null) { 
+                winCondition(winner);
+            }else{
+                if (player.getName().equals(currentPlayer.getName())) {
+                    do{
+                        gameController.nextPlayer();
+                        nextPlayer = gameController.getCurrentPlayer();
+                    }while(nextPlayer.isBankrupt());
+                    // change player panel
+                    gamePlayer.changePlayerPanel(nextPlayer);
+                    // set player for next round
+                    setCurrentPlayer(nextPlayer);
+                }}
         }else{
             gameBoard.addPlayerOnBoard(player);
+            gamePlayer.setPlayerActionLabel(player, "");
+            updatePlayerInfo(player);
         }
     }
 
