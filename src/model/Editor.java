@@ -5,11 +5,12 @@ import model.list.Node;
 
 public class Editor {
     private CircularLinkedList board;
-    private Player currentPlayer;
+    private GameModel gameModel;
 
-    public Editor(CircularLinkedList board, TurnController turnController) {
+    public Editor(CircularLinkedList board, GameModel gameModel) {
         this.board = board;
-        this.currentPlayer = turnController.getCurrentPlayer();
+        this.gameModel = gameModel;
+
     }
 
     // Modify the ownership of a land slot
@@ -46,7 +47,7 @@ public class Editor {
 
     // Modify who’s turn is it to move.
     public void modifyCurrentPlayer(Player newCurrentPlayer) {
-        this.currentPlayer = newCurrentPlayer;
+        this.gameModel.setCurrPlayer(newCurrentPlayer);
     }
 
 }

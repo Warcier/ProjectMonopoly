@@ -29,5 +29,7 @@ public class TurnController {
     }
 
 
-
+    public void setCurrentPlayer(Player player) {
+        currentPlayerIndex = players.indexOf(player);
+    }
 }

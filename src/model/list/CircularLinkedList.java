@@ -209,6 +209,19 @@ public class CircularLinkedList {
         } while (current != head);
     }
 
+    public void ShowAllPlayerStats(){
+        for (Player player : players) {
+            System.out.println("Player: " + player.getName());
+            System.out.println("Cash: " + player.getCash());
+            System.out.println("Properties: ");
+            for (Property property : player.getPlayerProperty()) {
+                System.out.println(property.getLandName());
+            }
+            System.out.print("--------------------\n");
+        }
+    }
+
+
 
     public Player checkWinCondition() {
         List<Player> notBankruptPlayers = new ArrayList<>();

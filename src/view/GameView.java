@@ -247,7 +247,8 @@ public class GameView extends javax.swing.JFrame {
                     nextPlayerBut.setEnabled(true); 
                 }
 
-                gameController.ShowAllPlayerNode();
+                // gameController.ShowAllPlayerNode();
+                gameController.showAllPlayerStats();
             }});
             rollDiceBut.setEnabled(false);
 
