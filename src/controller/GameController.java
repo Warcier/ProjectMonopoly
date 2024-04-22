@@ -43,6 +43,7 @@ public class GameController {
         // Get current player to show in view
         return gameModel.getCurrPlayer();
     }
+
     public void  moveCurrentPlayer(Player player, int diceNum){
         // Implement move player logic here
         gameModel.moveCurrentPlayer(player, diceNum);
@@ -120,6 +121,10 @@ public class GameController {
         // Implement buy property logic here
         gameModel.buyProperty(currentPlayer);
     }
+
+    public void showAllPlayerStats(){
+        gameModel.getBoard().ShowAllPlayerStats();
+    }
 /*
  * 
  * Editor
@@ -147,30 +152,30 @@ public class GameController {
         dice1Clicked = false;
         dice2Clicked = false;
     }
-    //TODO: call modifyLandOwnership from model and get value in GUI
+
     public void changeOwnerBut(int slot, Player newOwner) {
         gameModel.getEditor().modifyLandOwnership(slot, newOwner);
         updateViewPlayerInfo(newOwner);
         
     }
-    //TODO: call modifyPlayerBalance from model and get value in GUI
+
     public void changeBalanceBut(Player player, int newBalance) {
         gameModel.getEditor().modifyPlayerBalance(player, newBalance);
         updateViewPlayerInfo(player);
     }
-    //TODO: call modifyPlayerLocation from model and get value in GUI
+
     public void changeLocationBut(Player player, int newLocation) {
         gameModel.getEditor().modifyPlayerLocation(player, newLocation);
         gameView.movePlayerLoca(player);
         updateViewPlayerInfo(player);
     }
-    //TODO: call modifyPlayerStatus from model and get value in GUI
+
     public void changeStatusBut(Player player, boolean isBankrupt) {
         gameModel.getEditor().modifyPlayerStatus(player, isBankrupt);
         gameView.changeStatus(player);
 
     }
-    //TODO: call modifyCurrentPlayer from model and get value in GUI
+
     public void changeCurrentPlayerBut(Player newCurrentPlayer) {
         gameModel.getEditor().modifyCurrentPlayer(newCurrentPlayer);
         changeCurrPlayer(newCurrentPlayer);

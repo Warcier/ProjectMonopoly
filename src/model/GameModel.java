@@ -19,7 +19,7 @@ public class GameModel {
         this.board = new CircularLinkedList(players, properties);
         this.turnController = new TurnController();
         this.dice = new Dice();
-        this.editor = new Editor(board, turnController);
+        this.editor = new Editor(board, this);
     }
 
     public void setGameController(GameController gameController) {
@@ -60,6 +60,10 @@ public class GameModel {
 
     public Player getCurrPlayer(){
         return turnController.getCurrentPlayer();
+    }
+
+    public void setCurrPlayer(Player player){
+        turnController.setCurrentPlayer(player);
     }
 
     public void findPropertyOwner(Player player){

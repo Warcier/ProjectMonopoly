@@ -28,7 +28,6 @@ public class Main {
 
 
 
-
         java.awt.EventQueue.invokeLater(() -> gameView.setVisible(true));
 
         System.out.println("Game started");
