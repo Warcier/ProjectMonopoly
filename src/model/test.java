@@ -18,8 +18,7 @@ public class test {
 
     public static List<Property> initProperty() {
         List<Property> properties = new ArrayList<>();
-        //To Do, How to link up to file name
-        String file ="C:/Users/rexhe/Desktop/COM3101/ProjectMonopoly/src/model/Property.csv";
+        String file ="./src/model/Property.csv";
         String line = "";
         try{
             BufferedReader br = new BufferedReader(new FileReader(file));
