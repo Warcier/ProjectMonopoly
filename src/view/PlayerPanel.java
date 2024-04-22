@@ -7,6 +7,8 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 
 import java.util.List;
+import java.util.Observer;
+import java.util.Observable;
 import java.util.stream.Collectors;
 
 import controller.GameController;
@@ -51,8 +53,6 @@ public class PlayerPanel extends JLayeredPane{
         this.gameController = gameController;
     }
 
-
-
     // create the player information display panel
     private JLayeredPane createPlayerPanel(int panelWidth,int panelHeight,String playerName,Color playerColor, int playerNum){
         // Create the panel
@@ -95,7 +95,7 @@ public class PlayerPanel extends JLayeredPane{
         playerTakeActionJLabel.setFont(new Font("Arial", Font.BOLD, 18));
         playerTakeActionJLabel.setHorizontalAlignment(SwingConstants.CENTER);
         playerTakeActionJLabel.setVerticalAlignment(SwingConstants.CENTER); 
-        playerTakeActionJLabel.setBounds(150, panelHeight-45, 200, 40);
+        playerTakeActionJLabel.setBounds(150, panelHeight-45, 230, 40);
         playerPanel.add(playerTakeActionJLabel);
 
         // Add the panel to the card layout with a unique identifier
@@ -116,10 +116,12 @@ public class PlayerPanel extends JLayeredPane{
             playerInfoArea.setText("Current Cash: "+ player.getCash()+"\n");
             // Display player status
             playerInfoArea.append("Status: "+ (player.isBankrupt() ? "Bankrupt" : "Active") +"\n");
-            // Display player current position
-            playerInfoArea.append("Position: "+ gameController.findPlayerNode(player).getProperty().getLandName()+"\n");
-            // Display player current Property
-            playerInfoArea.append("Own Property: "+propertiesToString(player.getPlayerProperty())+"\n");
+            if (!player.isBankrupt()) {
+                // Display player current position
+                playerInfoArea.append("Position: "+ gameController.findPlayerNode(player).getProperty().getLandName()+"\n");
+                // Display player current Property
+                playerInfoArea.append("Own Property: "+propertiesToString(player.getPlayerProperty())+"\n");
+            }
         }
     }
 
@@ -163,6 +165,7 @@ public class PlayerPanel extends JLayeredPane{
         }
         card.show(this, ""+(playerNum));
         updatePlayerInfoArea(changePlayer);
+        resetActionLabel(playerNum);
         GameView.showGameMessage("Change to "+changePlayer.getName()+" trun.");
     }
 
@@ -193,5 +196,10 @@ public class PlayerPanel extends JLayeredPane{
         }
         playerTakeAction.setText(action);
     }
-    
+    private void resetActionLabel(int playerNum){
+        // reset the action label to "" when start a new round
+        JLayeredPane currentPlayerPanel = playerPanels[playerNum-1];
+        JLabel playerTakeAction = (JLabel) currentPlayerPanel.getComponent(3);
+        playerTakeAction.setText("");
+    }
 }

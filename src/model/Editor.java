@@ -17,7 +17,14 @@ public class Editor {
     public void modifyLandOwnership(int slot, Player newOwner) {
         Node node = board.getSlot(slot);
         if (node != null) {
-            node.setOwner(newOwner);
+            if (node.getOwner()!=null) {
+                if (newOwner.getName().equals(node.getOwner().getName())) {
+                    return;
+                }
+            }else{
+                node.setOwner(newOwner);
+                newOwner.addProperty(node.getProperty());
+            }
         }
     }
 

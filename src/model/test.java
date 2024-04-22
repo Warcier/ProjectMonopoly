@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.*;
 
 public class test {
 
@@ -16,34 +17,21 @@ public class test {
     }
 
     public static List<Property> initProperty() {
-        // Implement property initialization here
         List<Property> properties = new ArrayList<>();
+        String file ="./src/model/Property.csv";
+        String line = "";
+        try{
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            while((line = br.readLine()) != null){
+                String[] values = line.split(",");
+                properties.add(new Property(values[0], Integer.parseInt(values[1])));
+            }
+        } catch(FileNotFoundException e){
+            e.printStackTrace();
+        }catch(IOException e){
+            e.printStackTrace();
 
-        properties.add(new Property("GO", 0));
-        properties.add(new Property("Wanchai", 1200));
-        properties.add(new Property("Ping Chau", 3000));
-        properties.add(new Property("Tai O", 4000));
-        properties.add(new Property("Lantau", 4000));
-        properties.add(new Property("Central", 3000));
-        properties.add(new Property("West Kowloon", 2000));
-        properties.add(new Property("Kowloon Bay", 2000));
-        properties.add(new Property("City One", 2000));
-        properties.add(new Property("Sha Tin", 2000));
-        properties.add(new Property("Tai Po Market", 2000));
-        properties.add(new Property("University", 200));
-        properties.add(new Property("Sai Yin Pun", 2300));
-        properties.add(new Property("Kennedy Town", 2400));
-        properties.add(new Property("Chai Wan", 2800));
-        properties.add(new Property("Jordan", 2600));
-        properties.add(new Property("Mong Kok", 2400));
-        properties.add(new Property("Tung Chung", 2300));
-        properties.add(new Property("Sunny Bay", 2400));
-        properties.add(new Property("Slot 20", 2500));
-        properties.add(new Property("Slot 21", 2600));
-        properties.add(new Property("Slot 22", 2700));
-        properties.add(new Property("Slot 23", 2800));
-        properties.add(new Property("Slot 24", 2900));
-
+    }
         return properties;
     }
 
