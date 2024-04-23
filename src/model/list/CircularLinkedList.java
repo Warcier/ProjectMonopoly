@@ -112,7 +112,8 @@ public class CircularLinkedList {
 
         if (owner != null) {
             if (rentPlayer.getCash() < rentPrice) {
-                owner.addCash(rentPlayer.getCash() + owner.getCash());
+                owner.addCash(rentPlayer.getCash());
+                rentPlayer.deductCash(rentPlayer.getCash());
                 this.PlayerBankrupted(rentPlayer);
                 return;
             }

@@ -235,7 +235,8 @@ public class GameView extends javax.swing.JFrame {
                     gameController.buyProperty(currentPlayer);
                 }
                 // update current player info and current player in player panel
-                setCurrentPlayer(gameController.getCurrentPlayer());
+                //setCurrentPlayer(gameController.getCurrentPlayer());
+                gamePlayer.updatePlayerInfoArea(currentPlayer);
                 // Check if the player is bankrupt after buy/pay rent
                 if (currentPlayer.isBankrupt()) {
                     // if yes show message
@@ -482,7 +483,7 @@ public class GameView extends javax.swing.JFrame {
         // Frame for tracking all player info
         JFrame trackFrame = new JFrame();
         trackFrame.setTitle("Track Players");
-        trackFrame.setSize(new Dimension(400, 300));
+        trackFrame.setSize(new Dimension(500, 300));
         JPanel trackPanel = new JPanel();
         trackPanel.setLayout(new GridBagLayout());
         trackPanel.setBackground(new Color(204, 204, 204));
@@ -515,6 +516,7 @@ public class GameView extends javax.swing.JFrame {
         trackLabel.setBorder(BorderFactory.createCompoundBorder(line, padding));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.weightx = 2;
+        gbc.weightx = 1;
         gbc.gridx = x;
         gbc.gridy = y;
         gbc.fill = GridBagConstraints.HORIZONTAL;
