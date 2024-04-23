@@ -168,16 +168,9 @@ public class GameView extends javax.swing.JFrame {
                         showGameMessage(currentPlayer.getName()+" has land on his own property (" + node.getProperty().getLandName()+")");
                         addPlayerTakenAction(currentPlayer,"Land on Own Property");
                     }else{
-                        boolean trade = true;
-                        if (trade){
-                            showGameMessage(currentPlayer.getName() + " traded with " + node.getOwner().getName());
-                            addPlayerTakenAction(currentPlayer, "Trade with " + node.getOwner().getName());
-                            gameController.tradeProperty(currentPlayer, node);
-                        }else {
-                            showGameMessage(currentPlayer.getName() + " has to pay rent to " + node.getOwner().getName());
-                            addPlayerTakenAction(currentPlayer, "Pay Rent to " + node.getOwner().getName());
-                            gameController.payRent(currentPlayer, node);
-                        }
+                        showGameMessage(currentPlayer.getName() + " has to pay rent to " + node.getOwner().getName());
+                        addPlayerTakenAction(currentPlayer, "Pay Rent to " + node.getOwner().getName());
+                        gameController.payRent(currentPlayer, node);
                     }
                 }
                 // if node owner is null Buy the node

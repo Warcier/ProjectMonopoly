@@ -117,9 +117,9 @@ public class GameController {
         gameModel.payRent(currentPlayer, propertyNode);
     }
 
-    public void tradeProperty(Player currentPlayer, Node node) {
+    public void tradeProperty(Player currentPlayer, Player otherPlayer, Node propertyNode) {
         // Implement trade property logic here
-        gameModel.tradeProperty(currentPlayer,node);
+        gameModel.getBoard().tradeProperty(currentPlayer, otherPlayer, propertyNode);
     }
 
     public void buyProperty(Player currentPlayer) {

@@ -1,5 +1,6 @@
 package model.list;
 
+import model.GameModel;
 import model.Player;
 import model.Property;
 
@@ -16,16 +17,19 @@ public class CircularLinkedList {
     private int size;
     private static final int MAX_SIZE = 24;
 
+    private GameModel gameModel;
+
 
     /**
      * Constructor
      */
-    public CircularLinkedList(List<Player> players, List<Property> properties){
+    public CircularLinkedList(List<Player> players, List<Property> properties, GameModel gameModel){
         CircularLinkedList.players = players;
         CircularLinkedList.properties = properties;
         head = null;
         tail = null;
         size = 0;
+        this.gameModel = gameModel;
     }
 
     public static List<Player> getPlayers() {
@@ -260,7 +264,7 @@ public class CircularLinkedList {
         return null; 
     }
 
-    // For Editor Function
+    //For Editor Function
     //Find Player using the name by pasing in String parameter
     public Player findPlayer(String name){
         for (Player player : players) {
@@ -270,20 +274,21 @@ public class CircularLinkedList {
         }
         return null;
     }
+    
 
-    public void tradeProperty(Player currentPlayer,Node node) {
-       if (currentPlayer.isBankrupt()) {
-           return;
-       }
-       if (node.getOwner() == null) {
-           return;
-       }
-       if (currentPlayer.getCash() < node.getProperty().getLandPrice()) {
-           currentPlayer.playerBankrupted();
-       }
-       node.getOwner().removeProperty(node.getProperty());
-       node.setOwner(currentPlayer);
-       currentPlayer.addProperty(node.getProperty());
+    public void tradeProperty(Player buyer, Player seller, Node sellingProperty) {
+        List<Property> property = seller.getPlayerProperty();
+        Node propertyNode = getSlot(sellingProperty.getSlot());
+        if (property.contains(propertyNode.getProperty())) {
+            buyer.addProperty(propertyNode.getProperty());
+            seller.removeProperty(propertyNode.getProperty());
+            propertyNode.setOwner(buyer);
+            buyer.deductCash(propertyNode.getProperty().getLandPrice());
+            seller.addCash(propertyNode.getProperty().getLandPrice());
+            gameModel.addGameMessage(buyer.getName() + " has bought " + propertyNode.getProperty().getLandName() + " from " + seller.getName());
+        } else {
+            gameModel.addGameMessage("Trade failed. " + seller.getName() + " does not own " + propertyNode.getProperty().getLandName());
+        }
     }
 
 }
