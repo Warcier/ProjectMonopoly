@@ -48,12 +48,10 @@ public class GameEditor extends JFrame{
         changeOwnerTitle.setForeground(Color.BLACK);
         changeOwnerTitle.setFont(titleFont);
         changeOwnerTitle.setBounds(TITLE_XCOORD, yCoord+=10, PANEL_WIDTH-50, 30); 
-        //changeOwnerTitle.setHorizontalAlignment(SwingConstants.CENTER);
 
         JLabel ownerSlotLabel = new JLabel("Slot :");
         ownerSlotLabel.setForeground(Color.BLACK);
         ownerSlotLabel.setFont(labelFont);
-        //ownerSlotLabel.setBorder(new LineBorder(new Color(0, 0, 0)));
         ownerSlotLabel.setHorizontalAlignment(JLabel.RIGHT);
         ownerSlotLabel.setBounds(LABEL_XCOORD, yCoord+=40, (PANEL_WIDTH/2)-50, 35); 
 
@@ -75,7 +73,7 @@ public class GameEditor extends JFrame{
         changeOwnerBut.setHorizontalAlignment(SwingConstants.CENTER);
         changeOwnerBut.addActionListener(new ActionListener() {
 			@Override
-            // TODO: changeOwnerBut logic
+            // changeOwnerBut logic
 			public void actionPerformed(ActionEvent e) {
                 Player player = controller.getBoard().findPlayer(ownerPlayerBox.getSelectedItem().toString());
                 int slot = ownerSlotBox.getSelectedIndex();
@@ -114,7 +112,7 @@ public class GameEditor extends JFrame{
         giveCashBut.setHorizontalAlignment(SwingConstants.CENTER);
         giveCashBut.addActionListener(new ActionListener() {
 			@Override
-            // TODO: giveCash logic
+            // giveCash logic
 			public void actionPerformed(ActionEvent e) {
                 try {
                     Player player = controller.getBoard().findPlayer(cashPlayerBox.getSelectedItem().toString());
@@ -130,7 +128,6 @@ public class GameEditor extends JFrame{
         movePlayerTitle.setForeground(Color.BLACK);
         movePlayerTitle.setFont(titleFont);
         movePlayerTitle.setBounds(TITLE_XCOORD, yCoord+=40, PANEL_WIDTH-50, 30); 
-        //movePlayerTitle.setHorizontalAlignment(SwingConstants.CENTER);
 
         JLabel movePlayerLabel = new JLabel("Player :");
         movePlayerLabel.setForeground(Color.BLACK);
@@ -206,7 +203,6 @@ public class GameEditor extends JFrame{
         currentPlayerTitle.setForeground(Color.BLACK);
         currentPlayerTitle.setFont(titleFont);
         currentPlayerTitle.setBounds(TITLE_XCOORD, yCoord+=40, PANEL_WIDTH-50, 30); 
-        //currentPlayerTitle.setHorizontalAlignment(SwingConstants.CENTER);
 
         JLabel currPlayerLabel = new JLabel("Set Current Player :");
         currPlayerLabel.setForeground(Color.BLACK);

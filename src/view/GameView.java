@@ -3,6 +3,8 @@ package view;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
+import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -108,6 +110,9 @@ public class GameView extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // roll dice button logic
+                // unable the trade button
+                tradeBut.setEnabled(false);
+
                 gameController.rollDice();
                 int diceNumber = gameController.getDiceNum();
                 if (diceNumber == 0) {
@@ -154,11 +159,9 @@ public class GameView extends javax.swing.JFrame {
                     }
                 }
                 // if node owner is null Buy the node
-                /**if (node.getOwner() == null) {
-                    showGameMessage(currentPlayer.getName()+" bought the property");
-                    addPlayerTakenAction(currentPlayer,"Buy "+node.getProperty().getLandName());
-                    gameController.buyProperty(currentPlayer);
-                }*/
+                if (node.getOwner() == null) {
+                    buyBut.setEnabled(true);
+                }
                 // update current player info and current player in player panel
                 setCurrentPlayer(gameController.getCurrentPlayer());
                 // Check if the player is bankrupt after buy/pay rent
@@ -179,8 +182,6 @@ public class GameView extends javax.swing.JFrame {
                     rollDiceBut.setEnabled(false);
                     nextPlayerBut.setEnabled(true);
                 }
-
-                //gameController.ShowAllPlayerNode();
             }});
 
 
@@ -208,6 +209,7 @@ public class GameView extends javax.swing.JFrame {
                 setCurrentPlayer(nextPlayer);
 
                 rollDiceBut.setEnabled(true);
+                tradeBut.setEnabled(true);
                 buyBut.setEnabled(false);
                 nextPlayerBut.setEnabled(false);
             }});
@@ -228,6 +230,22 @@ public class GameView extends javax.swing.JFrame {
                     addPlayerTakenAction(currentPlayer,"Buy "+node.getProperty().getLandName());
                     gameController.buyProperty(currentPlayer);
                 }
+                // update current player info and current player in player panel
+                setCurrentPlayer(gameController.getCurrentPlayer());
+                // Check if the player is bankrupt after buy/pay rent
+                if (currentPlayer.isBankrupt()) {
+                    // if yes show message
+                    playerBankrupt(currentPlayer);
+                }
+                // check if game over
+                Player winner = gameController.checkWinCondition();
+                if (winner != null) {
+                    winCondition = true;
+                    nextPlayerBut.setEnabled(false);
+                    rollDiceBut.setEnabled(false);
+                    winCondition(winner);
+                }
+                buyBut.setEnabled(false);
             }});
 
 
@@ -375,56 +393,73 @@ public class GameView extends javax.swing.JFrame {
     private void initTradeDialog(){
         JDialog tradeDialog = new JDialog();
         tradeDialog.setTitle("Trading Property between player");
-        tradeDialog.setSize(200, 100);
+        tradeDialog.setSize(350, 200);
         tradeDialog.setLocationRelativeTo(null);  
         tradeDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         tradeDialog.setLayout(null);
-        tradeDialog.setModalityType(Dialog.ModalityType.MODELESS);
+
+        JPanel tradePanel = new JPanel();
+        tradePanel.setLayout(null);
+        tradePanel.setBackground(new Color(204,204,204));
+        tradePanel.setBounds(0,0,350,200);
 
         JLabel tradePlayerLabel = new JLabel("Player :");
         tradePlayerLabel.setForeground(Color.BLACK);
         tradePlayerLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         //tradePlayerLabel.setHorizontalAlignment(JLabel.RIGHT);
-        tradePlayerLabel.setBounds(20, 20, 20, 30);
+        tradePlayerLabel.setBounds(20, 20, 80, 30); 
         
-        String[] player = {"Player 1","Player 2","Player 3", "Player 4"};
-        JComboBox tradePlayerBox = new JComboBox<>(player);
-        tradePlayerBox.setBounds(50, 20, 20, 30);
+        List<String> player = new ArrayList<>(Arrays.asList("Player 1", "Player 2", "Player 3", "Player 4"));
+        player.remove(currentPlayer.getName());
+        JComboBox tradePlayerBox = new JComboBox<>(player.toArray(new String[0]));
+        tradePlayerBox.setBounds(110, 20, 150, 30);
 
-        JLabel statusPlayerLabel = new JLabel("Player :");
-        statusPlayerLabel.setForeground(Color.BLACK);
-        statusPlayerLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-        statusPlayerLabel.setHorizontalAlignment(JLabel.RIGHT);
-        statusPlayerLabel.setBounds(80, 20, 20, 30);
+        JLabel tradePropertyLabel = new JLabel("Property :");
+        tradePropertyLabel.setForeground(Color.BLACK);
+        tradePropertyLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        //tradePropertyLabel.setHorizontalAlignment(JLabel.RIGHT);
+        tradePropertyLabel.setBounds(20, 60, 80, 30);
 
         List<Property> property = gameController.getBoard().getProperties();
         List<String> propertyNames = property.stream().map(Property::getLandName).collect(Collectors.toList());
         JComboBox tradePropertyBox = new JComboBox<>(propertyNames.toArray(new String[0]));
-        tradePropertyBox.setBounds(100, 20, 20, 30);
+        tradePropertyBox.setBounds(110, 60, 150, 30); 
 
         JButton buyTradeBut = new JButton("Buy");
         buyTradeBut.setFont(new Font("Arial", Font.PLAIN, 14));
-        buyTradeBut.setBounds(950,580,200,35);
+        buyTradeBut.setBounds(20, 100, 120, 30);
         buyTradeBut.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Buy player properties Logic
                 Player seller = gameController.getBoard().findPlayer(tradePlayerBox.getSelectedItem().toString());
                 Node slot = gameController.getBoard().getSlot(tradePropertyBox.getSelectedIndex());
-                
+                gameController.tradeProperty(currentPlayer, seller, slot);
+                gamePlayer.updatePlayerInfoArea(currentPlayer);
             }});
 
         JButton sellTradeBut = new JButton("Sell");
         sellTradeBut.setFont(new Font("Arial", Font.PLAIN, 14));
-        sellTradeBut.setBounds(950,580,200,35);
+        sellTradeBut.setBounds(150, 100, 120, 30);
         sellTradeBut.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Sell properties to player Logic
                 Player buyer = gameController.getBoard().findPlayer(tradePlayerBox.getSelectedItem().toString());
                 Node slot = gameController.getBoard().getSlot(tradePropertyBox.getSelectedIndex());
+                gameController.tradeProperty(buyer, currentPlayer, slot);
+                gamePlayer.updatePlayerInfoArea(currentPlayer);
             }});
 
+        tradePanel.add(tradePlayerLabel);
+        tradePanel.add(tradePlayerBox);
+        tradePanel.add(tradePropertyLabel);
+        tradePanel.add(tradePropertyBox);
+        tradePanel.add(buyTradeBut);
+        tradePanel.add(sellTradeBut);
+
+        tradeDialog.add(tradePanel);
+        tradeDialog.setVisible(true);
     }
 
    public void updatePlayerInfo(Player player){
