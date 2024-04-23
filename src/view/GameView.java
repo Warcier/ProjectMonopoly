@@ -36,8 +36,6 @@ public class GameView extends javax.swing.JFrame {
     private Player nextPlayer;
     private boolean winCondition = false;
     private Player winner;
-    private CircularLinkedList board;
-
 
     public GameView() {
 
@@ -235,7 +233,7 @@ public class GameView extends javax.swing.JFrame {
                     gameController.buyProperty(currentPlayer);
                 }
                 // update current player info and current player in player panel
-                //setCurrentPlayer(gameController.getCurrentPlayer());
+                setCurrentPlayer(gameController.getCurrentPlayer());
                 gamePlayer.updatePlayerInfoArea(currentPlayer);
                 // Check if the player is bankrupt after buy/pay rent
                 if (currentPlayer.isBankrupt()) {
@@ -306,10 +304,6 @@ public class GameView extends javax.swing.JFrame {
 
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
-    }
-
-    public void setViewBoard(CircularLinkedList board){
-        this.board = board;
     }
 
     public void setGameBoardController(GameController controller){

@@ -17,13 +17,9 @@ import javax.swing.border.LineBorder;
 public class SlotSquare extends javax.swing.JLayeredPane{
 
     GameController controller;
-    private JLayeredPane slotPanel;
     private JLabel nameLabel;
     private JLabel priceLabel;
 
-    private final List<Property> properties = Generator.initProperty();
-    private ArrayList<String> slotNames = new ArrayList<>();
-    private ArrayList<Integer> slotPrices = new ArrayList<>();
     private int slotPrice;
     private String slotName;
     private int slotNum;
@@ -46,15 +42,10 @@ public class SlotSquare extends javax.swing.JLayeredPane{
                 displayDetails();
             }
         });
-
-        // test if property is empty
-        if (slotNames == null || slotPrices == null || slotNames.size() <= slotNum || slotPrices.size() <= slotNum) {
-            initializeSlots();
-        }
-        // set slot name, price, rent
+        // set slot name, price
         try {
-            this.slotName = slotNames.get(slotNum);
-            this.slotPrice = slotPrices.get(slotNum);
+            this.slotName = controller.getBoard().getSlot(slotNum).getProperty().getLandName();
+            this.slotPrice = controller.getBoard().getSlot(slotNum).getProperty().getLandPrice();
             
         } catch (NumberFormatException e) {
             System.out.println(slotNum+" is empty");
@@ -135,15 +126,6 @@ public class SlotSquare extends javax.swing.JLayeredPane{
 
         // Label bounds will be adjusted outside this method, as they may differ
         return label;
-    }
-
-    private void initializeSlots(){
-        // Create slots in board
-        for (int i=0; i < properties.size();i++){
-            Property slot = properties.get(i);
-            slotNames.add(slot.getLandName());
-            slotPrices.add(slot.getLandPrice());
-        }
     }
 
     private void displayDetails(){
