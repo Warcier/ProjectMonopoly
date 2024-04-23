@@ -86,4 +86,8 @@ public class GameModel {
     public void addGameMessage(String message){
         gameController.addGameMessageToLog(message);
     }
+
+    public void tradeProperty(Player currentPlayer, Node node) {
+        board.tradeProperty(currentPlayer, node);
+    }
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.*;
 
-public class test {
+public class Generator {
 
     public static List<Player> initPlayer() {
         List<Player> players = new ArrayList<>();

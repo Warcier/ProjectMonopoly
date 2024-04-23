@@ -35,29 +35,13 @@ public class GameView extends javax.swing.JFrame {
     private List<Player> players;
     private List<Property> properties;
 
-    public void setGameController(GameController gameController) {
-        this.gameController = gameController;
-    }
-
-    public void setViewBoard(CircularLinkedList board){
-        this.board = board;
-    }
-
-    public void setGameBoardController(GameController controller){
-        this.gameBoard.setGameController(controller);
-    }
-
-    public void setPlayerPanelController(GameController controller){
-        this.gamePlayer.setGameController(controller);
-    }
-
     public GameView() {
 
         setTitle("COM3101 Project Group 7 - Monoploy");
         setPreferredSize(new Dimension(1400, 750));
         setLayout(null);
         setGameController(new GameController());
-        
+
         // Board
         gameBoard = new BoardPanel(10,20);
         gameBoard.setBackground(new Color(51, 255, 153));
@@ -69,19 +53,19 @@ public class GameView extends javax.swing.JFrame {
 
         // Game log
         logText = new JTextArea();
-	    logText.setFont(new Font("Arial", Font.PLAIN, 12));
+        logText.setFont(new Font("Arial", Font.PLAIN, 12));
         logText.setLineWrap(true);
         logText.setWrapStyleWord(true);
         gameLog = new JScrollPane(logText);
         gameLog.setBounds(950,370,400,200);
         gameLog.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        
+
         // Start Game Button
         startGameBut = new JButton("Start Game");
-            // Start Game function
+        // Start Game function
         startGameBut.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 // Start Game Logic
                 // First setup the game board in the view
                 gameController.createBoard();
@@ -105,16 +89,16 @@ public class GameView extends javax.swing.JFrame {
 
         startGameBut.setFont(new Font("Arial", Font.PLAIN, 14));
         startGameBut.setBounds(1060,310,200,35);
-        
-        // Next Round Button          
+
+        // Next Round Button
         nextPlayerBut = new JButton("Next Player");
         nextPlayerBut.setFont(new Font("Arial", Font.PLAIN, 14));
         nextPlayerBut.setBounds(1060,630,200,35);
-            //Next Round Button function
-            // Function: change to next player panel
+        //Next Round Button function
+        // Function: change to next player panel
         nextPlayerBut.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 // set next player to model
                 //First check if next player is already bankrupted else skip
                 do{
@@ -134,16 +118,16 @@ public class GameView extends javax.swing.JFrame {
                 nextPlayerBut.setEnabled(false);
             }});
 
-            nextPlayerBut.setEnabled(false);
+        nextPlayerBut.setEnabled(false);
 
-        // Roll dice Button        
+        // Roll dice Button
         rollDiceBut = new JButton("Roll Dice");
         rollDiceBut.setFont(new Font("Arial", Font.PLAIN, 14));
         rollDiceBut.setBounds(1060,580,200,35);
-            //Roll dice Button function
+        //Roll dice Button function
         rollDiceBut.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 // roll dice button logic
                 gameController.rollDice();
                 int diceNumber = gameController.getDiceNum();
@@ -168,8 +152,8 @@ public class GameView extends javax.swing.JFrame {
                 showGameMessage("Roll Dice : "+ diceNumber);
 
                 // move player to next node in model
-                gameController.moveCurrentPlayer(currentPlayer, diceNumber);                                    
-                
+                gameController.moveCurrentPlayer(currentPlayer, diceNumber);
+
                 // update player position in the view
                 gameBoard.movePlayerChess(currentPlayer);
                 if (currentPlayer.getPassedGo()){
@@ -185,16 +169,23 @@ public class GameView extends javax.swing.JFrame {
                         showGameMessage(currentPlayer.getName()+" has land on his own property (" + node.getProperty().getLandName()+")");
                         addPlayerTakenAction(currentPlayer,"Land on Own Property");
                     }else{
-                        showGameMessage(currentPlayer.getName()+" has to pay rent to "+node.getOwner().getName());
-                        addPlayerTakenAction(currentPlayer,"Pay Rent to "+node.getOwner().getName());
-                        gameController.payRent(currentPlayer, node);
+                        boolean trade = true;
+                        if (trade){
+                            showGameMessage(currentPlayer.getName() + " traded with " + node.getOwner().getName());
+                            addPlayerTakenAction(currentPlayer, "Trade with " + node.getOwner().getName());
+                            gameController.tradeProperty(currentPlayer, node);
+                        }else {
+                            showGameMessage(currentPlayer.getName() + " has to pay rent to " + node.getOwner().getName());
+                            addPlayerTakenAction(currentPlayer, "Pay Rent to " + node.getOwner().getName());
+                            gameController.payRent(currentPlayer, node);
+                        }
                     }
                 }
                 // if node owner is null Buy the node
                 if (node.getOwner() == null) {
                     showGameMessage(currentPlayer.getName()+" bought the property");
                     addPlayerTakenAction(currentPlayer,"Buy "+node.getProperty().getLandName());
-                    gameController.buyProperty(currentPlayer);                   
+                    gameController.buyProperty(currentPlayer);
                 }
                 // update current player info and current player in player panel
                 setCurrentPlayer(gameController.getCurrentPlayer());
@@ -202,7 +193,7 @@ public class GameView extends javax.swing.JFrame {
                 if (currentPlayer.isBankrupt()) {
                     // if yes show message
                     playerBankrupt(currentPlayer);
-                }               
+                }
                 gamePlayer.updatePlayerInfoArea(currentPlayer);
 
                 // check if game over
@@ -210,20 +201,20 @@ public class GameView extends javax.swing.JFrame {
                 if (winner != null) {
                     winCondition = true;
                     nextPlayerBut.setEnabled(false);
-                    rollDiceBut.setEnabled(false); 
+                    rollDiceBut.setEnabled(false);
                     winCondition(winner);
                 }else{
                     rollDiceBut.setEnabled(false);
-                    nextPlayerBut.setEnabled(true); 
+                    nextPlayerBut.setEnabled(true);
                 }
 
                 //gameController.ShowAllPlayerNode();
             }});
-            rollDiceBut.setEnabled(false);
+        rollDiceBut.setEnabled(false);
 
         // Dice 1
         dice1 = new DicePanel(320,350,50,50);
-        // dice1 click 
+        // dice1 click
         dice1.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -242,9 +233,26 @@ public class GameView extends javax.swing.JFrame {
         getContentPane().add(startGameBut);
         getContentPane().add(nextPlayerBut);
         getContentPane().add(rollDiceBut);
-    
+
         pack();
-        this.setVisible(true);      
+        this.setVisible(true);
+    }
+
+
+    public void setGameController(GameController gameController) {
+        this.gameController = gameController;
+    }
+
+    public void setViewBoard(CircularLinkedList board){
+        this.board = board;
+    }
+
+    public void setGameBoardController(GameController controller){
+        this.gameBoard.setGameController(controller);
+    }
+
+    public void setPlayerPanelController(GameController controller){
+        this.gamePlayer.setGameController(controller);
     }
 
 

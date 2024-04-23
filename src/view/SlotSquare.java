@@ -2,7 +2,7 @@ package view;
 
 import controller.*;
 import model.Property;
-import model.test;
+import model.Generator;
 import model.list.*;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class SlotSquare extends javax.swing.JLayeredPane{
     private JLabel nameLabel;
     private JLabel priceLabel;
 
-    private final List<Property> properties = test.initProperty();
+    private final List<Property> properties = Generator.initProperty();
     private ArrayList<String> slotNames = new ArrayList<>();
     private ArrayList<Integer> slotPrices = new ArrayList<>();
     private int slotPrice;

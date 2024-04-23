@@ -271,4 +271,19 @@ public class CircularLinkedList {
         return null;
     }
 
+    public void tradeProperty(Player currentPlayer,Node node) {
+       if (currentPlayer.isBankrupt()) {
+           return;
+       }
+       if (node.getOwner() == null) {
+           return;
+       }
+       if (currentPlayer.getCash() < node.getProperty().getLandPrice()) {
+           currentPlayer.playerBankrupted();
+       }
+       node.getOwner().removeProperty(node.getProperty());
+       node.setOwner(currentPlayer);
+       currentPlayer.addProperty(node.getProperty());
+    }
+
 }

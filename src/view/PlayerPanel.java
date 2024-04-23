@@ -153,7 +153,6 @@ public class PlayerPanel extends JLayeredPane{
         }
     }
 
-
     public void changePlayerPanel(Player changePlayer){
         // change player information panel logic
         int playerNum = 0;
@@ -180,6 +179,7 @@ public class PlayerPanel extends JLayeredPane{
         card.show(this, ""+1);
 
     }
+
     public static void setPlayerActionLabel(Player player, String action){
         int playerNum = 0;
         switch (player.getName()) {
@@ -196,6 +196,7 @@ public class PlayerPanel extends JLayeredPane{
         }
         playerTakeAction.setText(action);
     }
+
     private void resetActionLabel(int playerNum){
         // reset the action label to "" when start a new round
         JLayeredPane currentPlayerPanel = playerPanels[playerNum-1];

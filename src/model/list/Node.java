@@ -12,7 +12,6 @@ public class Node {
     private Player owner;
     private Property property;
     List<Player> playersOnThisLand;
-
     Node next;
 
     public Node() {
@@ -45,16 +44,6 @@ public class Node {
 
     public List<Player> getPlayerOnThisLand() {
         return playersOnThisLand;
-    }
-
-    public void getIndex(Player player) {
-        System.out.println(playersOnThisLand.indexOf(player));
-    }
-
-    public void showPlayersOnThisLand() {
-        for (Player player : playersOnThisLand) {
-            System.out.println(player.getName());
-        }
     }
 
 }

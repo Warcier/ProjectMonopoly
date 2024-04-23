@@ -1,6 +1,6 @@
 import controller.GameController;
 import model.GameModel;
-import model.test;
+import model.Generator;
 import view.GameView;
 import view.GameEditor;
 
@@ -11,7 +11,7 @@ public class Main {
 
         GameView gameView = new GameView();
         GameController gameController = new GameController();
-        GameModel gameModel = new GameModel(test.initPlayer(), test.initProperty());
+        GameModel gameModel = new GameModel(Generator.initPlayer(), Generator.initProperty());
 
         gameController.setGameModel(gameModel);
         gameController.setGameView(gameView);

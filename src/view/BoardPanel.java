@@ -55,7 +55,6 @@ public class BoardPanel extends javax.swing.JLayeredPane {
         this.gameController = gameController;
     }
 
-
     public void initializeSquares() {
         // creating slots on the game board
         for (int slotNum = 0; slotNum < SQUARE_COUNT; slotNum++) {
@@ -174,6 +173,7 @@ public class BoardPanel extends javax.swing.JLayeredPane {
         this.setComponentZOrder(playerChess[playerNum], 0); 
         this.repaint(); 
     }
+
     public void removePlayerOnBoard(Player bankruptPlayer){
         // Remove player from the board
         int playerNum = 0;
@@ -190,6 +190,7 @@ public class BoardPanel extends javax.swing.JLayeredPane {
         this.validate();
         this.repaint();
     }
+
     public void addPlayerOnBoard(Player addPlayer){
         // add player back to board
         int playerNum = 0;

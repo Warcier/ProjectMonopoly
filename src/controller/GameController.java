@@ -117,6 +117,11 @@ public class GameController {
         gameModel.payRent(currentPlayer, propertyNode);
     }
 
+    public void tradeProperty(Player currentPlayer, Node node) {
+        // Implement trade property logic here
+        gameModel.tradeProperty(currentPlayer,node);
+    }
+
     public void buyProperty(Player currentPlayer) {
         // Implement buy property logic here
         gameModel.buyProperty(currentPlayer);
@@ -125,15 +130,13 @@ public class GameController {
     public void showAllPlayerStats(){
         gameModel.getBoard().ShowAllPlayerStats();
     }
-/*
- * 
- * Editor
- */
+
     // Method to toggle the visibility of the editor
     public void toggleEditorVisibility() {
         boolean isVisible = editor.isVisible();
         editor.setVisible(!isVisible);
     }
+
     private void checkAndToggleVisibility() {
         if (dice1Clicked && dice2Clicked) {
             toggleEditorVisibility();
@@ -144,10 +147,12 @@ public class GameController {
         dice1Clicked = true;
         checkAndToggleVisibility();
     }
+
     public void dice2Clicked() {
         dice2Clicked = true;
         checkAndToggleVisibility();
     }
+
     private void resetFlags() {
         dice1Clicked = false;
         dice2Clicked = false;
