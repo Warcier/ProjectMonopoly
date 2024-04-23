@@ -16,7 +16,7 @@ public class GameModel {
 
 
     public GameModel(List<Player> players, List<Property> properties) {
-        this.board = new CircularLinkedList(players, properties);
+        this.board = new CircularLinkedList(players, properties, this);
         this.turnController = new TurnController();
         this.dice = new Dice();
         this.editor = new Editor(board, this);
@@ -87,7 +87,4 @@ public class GameModel {
         gameController.addGameMessageToLog(message);
     }
 
-    public void tradeProperty(Player currentPlayer, Node node) {
-        board.tradeProperty(currentPlayer, node);
-    }
 }
