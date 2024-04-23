@@ -14,7 +14,7 @@ public class CircularLinkedList {
     private Node head;
     private Node tail;
     private int size;
-    private static final int MAX_SIZE = 23;
+    private static final int MAX_SIZE = 24;
 
 
     /**

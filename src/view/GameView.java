@@ -32,8 +32,7 @@ public class GameView extends javax.swing.JFrame {
     private boolean winCondition = false;
     private Player winner;
     private CircularLinkedList board;
-    private List<Player> players;
-    private List<Property> properties;
+
 
     public GameView() {
 
@@ -97,8 +96,8 @@ public class GameView extends javax.swing.JFrame {
         //Next Round Button function
         // Function: change to next player panel
         nextPlayerBut.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
                 // set next player to model
                 //First check if next player is already bankrupted else skip
                 do{
@@ -282,25 +281,33 @@ public class GameView extends javax.swing.JFrame {
     }
 
     private void trackPlayerMessage(Player player){
+        // Check if the player is not bankrupt
         if (!player.isBankrupt()) {
-            showGameMessage(player.getName()+ "'s round end."+"\n\n"+
-            "-----"+ player.getName()+" Status------"+"\n"+
-            "Current Cash: " + player.getCash()+"\n"+
-            "Status: "+ (player.isBankrupt() ? "Bankrupt" : "Active") +"\n"+
-            "Own Property: "+(gamePlayer.propertiesToString(player.getPlayerProperty()))+"\n"+
-            "Position: "+ gameController.findPlayerNode(player).getProperty().getLandName()+"\n"+
-            "-----------------"+"\n"+
-            "Next Player: " + nextPlayer.getName()+"\n"+
-            "-----------------"+"\n");
-        }else{showGameMessage("\n"+"-----------------"+"\n"+
-                            "Next Player: " + nextPlayer.getName()+"\n"+
-                            "-----------------"+"\n");
+            StringBuilder message = new StringBuilder();
+            message.append(player.getName() + "'s round end." + "\n\n" +
+                           "-----" + player.getName() + " Status------" + "\n" +
+                           "Current Cash: " + player.getCash() + "\n" +
+                           "Status: " + (player.isBankrupt() ? "Bankrupt" : "Active") + "\n");
+            String properties = player.getPlayerProperty() != null ? gamePlayer.propertiesToString(player.getPlayerProperty()) : "None";
+            message.append("Own Property: " + properties + "\n");
+            message.append("Position: " + gameController.findPlayerNode(player).getProperty().getLandName() + "\n" +
+                           "-----------------" + "\n" +
+                           "Next Player: " + nextPlayer.getName() + "\n" +
+                           "-----------------" + "\n");
+            showGameMessage(message.toString());
+        } else {
+            showGameMessage("\n" + "-----------------" + "\n" +
+                            "Next Player: " + nextPlayer.getName() + "\n" +
+                            "-----------------" + "\n");
         }
     }
 
    private void winCondition(Player winner){
         // game over dialog
         if (winner != null) {
+            winCondition = true;
+            this.nextPlayerBut.setEnabled(false);
+            this.rollDiceBut.setEnabled(false);
 
             JDialog gameOverDialog = new JDialog();
             gameOverDialog.setTitle("Game Over !!!");
@@ -355,8 +362,25 @@ public class GameView extends javax.swing.JFrame {
         // change player status view logic (editor)
         if (player.isBankrupt()) {
             playerBankrupt(player);
+            // check game over
+            Player winner = gameController.checkWinCondition();
+            if (winner != null) {
+                winCondition(winner);
+            }else{
+                if (player.getName().equals(currentPlayer.getName())) {
+                    do{
+                        gameController.nextPlayer();
+                        nextPlayer = gameController.getCurrentPlayer();
+                    }while(nextPlayer.isBankrupt());
+                    // change player panel
+                    gamePlayer.changePlayerPanel(nextPlayer);
+                    // set player for next round
+                    setCurrentPlayer(nextPlayer);
+                }}
         }else{
             gameBoard.addPlayerOnBoard(player);
+            gamePlayer.setPlayerActionLabel(player, "");
+            updatePlayerInfo(player);
         }
     }
 

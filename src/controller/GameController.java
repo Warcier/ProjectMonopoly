@@ -178,7 +178,7 @@ public class GameController {
     public void changeStatusBut(Player player, boolean isBankrupt) {
         gameModel.getEditor().modifyPlayerStatus(player, isBankrupt);
         gameView.changeStatus(player);
-        updateViewPlayerInfo(player);
+
     }
 
     public void changeCurrentPlayerBut(Player newCurrentPlayer) {

@@ -7,8 +7,6 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 
 import java.util.List;
-import java.util.Observer;
-import java.util.Observable;
 import java.util.stream.Collectors;
 
 import controller.GameController;
@@ -116,11 +114,14 @@ public class PlayerPanel extends JLayeredPane{
             playerInfoArea.setText("Current Cash: "+ player.getCash()+"\n");
             // Display player status
             playerInfoArea.append("Status: "+ (player.isBankrupt() ? "Bankrupt" : "Active") +"\n");
-            if (!player.isBankrupt()) {
+            if (/**!player.isBankrupt()*/gameController.findPlayerNode(player) != null) {
                 // Display player current position
                 playerInfoArea.append("Position: "+ gameController.findPlayerNode(player).getProperty().getLandName()+"\n");
                 // Display player current Property
                 playerInfoArea.append("Own Property: "+propertiesToString(player.getPlayerProperty())+"\n");
+            }else{
+                playerInfoArea.append("Position: "+"\n");
+                playerInfoArea.append("Own Property: "+"\n");
             }
         }
     }
@@ -193,7 +194,8 @@ public class PlayerPanel extends JLayeredPane{
         if (action.contains("Bankrupt")){
             playerTakeAction.setOpaque(true);
             playerTakeAction.setBackground(Color.BLACK);
-        }
+        }else{
+            playerTakeAction.setOpaque(false);}
         playerTakeAction.setText(action);
     }
 
