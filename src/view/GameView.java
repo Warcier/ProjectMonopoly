@@ -3,6 +3,8 @@ package view;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 import java.util.*;
 import java.util.List;
@@ -25,6 +27,7 @@ public class GameView extends javax.swing.JFrame {
     private JButton nextPlayerBut;
     private JButton rollDiceBut;
     private JButton tradeBut;
+    private JButton trackBut;
     private JButton buyBut;
     private DicePanel dice1;
     private DicePanel dice2;
@@ -39,12 +42,12 @@ public class GameView extends javax.swing.JFrame {
     public GameView() {
 
         setTitle("COM3101 Project Group 7 - Monoploy");
-        setPreferredSize(new Dimension(1400, 750));
+        setPreferredSize(new Dimension(1400, 770));
         setLayout(null);
         setGameController(new GameController());
 
         // Board
-        gameBoard = new BoardPanel(10,20);
+        gameBoard = new BoardPanel(15,20);
         gameBoard.setBackground(new Color(51, 255, 153));
         getContentPane().add(gameBoard);
 
@@ -85,6 +88,7 @@ public class GameView extends javax.swing.JFrame {
                 // enable buttons
                 startGameBut.setEnabled(false);
                 rollDiceBut.setEnabled(true);
+                trackBut.setEnabled(true);
             }});
 
         startGameBut.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -248,6 +252,18 @@ public class GameView extends javax.swing.JFrame {
                 buyBut.setEnabled(false);
             }});
 
+        // trackBut Button
+        trackBut = new JButton("Track All Player");
+        trackBut.setFont(new Font("Arial", Font.PLAIN, 14));
+        trackBut.setBounds(1060,680,190,35);
+        //Buy Button function
+        trackBut.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // trackBut logic
+                trackPlayer();
+            }});
+
 
 
         // Dice 1
@@ -271,6 +287,7 @@ public class GameView extends javax.swing.JFrame {
         rollDiceBut.setEnabled(false);
         buyBut.setEnabled(false);
         tradeBut.setEnabled(false);
+        trackBut.setEnabled(false);
 
         // add to main frame
         getContentPane().add(gameLog);
@@ -279,6 +296,7 @@ public class GameView extends javax.swing.JFrame {
         getContentPane().add(rollDiceBut);
         getContentPane().add(nextPlayerBut);
         getContentPane().add(buyBut);
+        getContentPane().add(trackBut);
 
         pack();
         this.setVisible(true);
@@ -406,7 +424,6 @@ public class GameView extends javax.swing.JFrame {
         JLabel tradePlayerLabel = new JLabel("Player :");
         tradePlayerLabel.setForeground(Color.BLACK);
         tradePlayerLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-        //tradePlayerLabel.setHorizontalAlignment(JLabel.RIGHT);
         tradePlayerLabel.setBounds(20, 20, 80, 30); 
         
         List<String> player = new ArrayList<>(Arrays.asList("Player 1", "Player 2", "Player 3", "Player 4"));
@@ -417,7 +434,6 @@ public class GameView extends javax.swing.JFrame {
         JLabel tradePropertyLabel = new JLabel("Property :");
         tradePropertyLabel.setForeground(Color.BLACK);
         tradePropertyLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-        //tradePropertyLabel.setHorizontalAlignment(JLabel.RIGHT);
         tradePropertyLabel.setBounds(20, 60, 80, 30);
 
         List<Property> property = gameController.getBoard().getProperties();
@@ -460,6 +476,49 @@ public class GameView extends javax.swing.JFrame {
 
         tradeDialog.add(tradePanel);
         tradeDialog.setVisible(true);
+    }
+
+    private void trackPlayer() {
+        // Frame for tracking all player info
+        JFrame trackFrame = new JFrame();
+        trackFrame.setTitle("Track Players");
+        trackFrame.setSize(new Dimension(400, 300));
+        JPanel trackPanel = new JPanel();
+        trackPanel.setLayout(new GridBagLayout());
+        trackPanel.setBackground(new Color(204, 204, 204));
+    
+        // Adding player labels to the panel
+        addPlayerLabel(trackPanel, gameController.getBoard().findPlayer("Player 1"), 0, 0);
+        addPlayerLabel(trackPanel, gameController.getBoard().findPlayer("Player 2"), 1, 0);
+        addPlayerLabel(trackPanel, gameController.getBoard().findPlayer("Player 3"), 0, 1);
+        addPlayerLabel(trackPanel, gameController.getBoard().findPlayer("Player 4"), 1, 1);
+        trackFrame.add(trackPanel);
+        trackFrame.setVisible(true);
+    }
+    private void addPlayerLabel(JPanel trackPanel,Player player,int x,int y){
+        JLabel trackLabel = new JLabel();
+        trackLabel.setForeground(Color.BLACK);
+        trackLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+
+        StringBuilder message = new StringBuilder("<html>");  // Start of HTML
+        String position = gameController.findPlayerNode(player) != null ? 
+                          gameController.findPlayerNode(player).getProperty().getLandName() : "None";
+        message.append(player.getName()).append("<br><br>");
+        message.append("Position: ").append(position).append("<br>");
+        message.append("Current Cash: ").append(player.getCash()).append("<br>");
+        message.append("Status: ").append(player.isBankrupt() ? "Bankrupt" : "Active");
+        message.append("</html>"); 
+
+        trackLabel.setText(message.toString());
+        Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10); // Padding
+        Border line = BorderFactory.createLineBorder(Color.GRAY, 2);       // Visible border
+        trackLabel.setBorder(BorderFactory.createCompoundBorder(line, padding));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.weightx = 2;
+        gbc.gridx = x;
+        gbc.gridy = y;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        trackPanel.add(trackLabel, gbc);
     }
 
    public void updatePlayerInfo(Player player){

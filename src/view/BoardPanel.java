@@ -21,8 +21,8 @@ public class BoardPanel extends javax.swing.JLayeredPane {
     GameController gameController;
     private JLabel[] playerChess = new JLabel[4];
     private static final int PANEL_WIDTH = 896;
-    private static final int PANEL_HEIGHT = 644;
-    private static final int SQUARE_COUNT = 24;
+    private static final int PANEL_HEIGHT = 693;
+    private static final int SQUARE_COUNT = 23;
     private static final int SQUARES_PER_SIDE = 7;
     int squareWidth;
     int squareHeight;
@@ -32,7 +32,7 @@ public class BoardPanel extends javax.swing.JLayeredPane {
     private int[] rotationAngles = {135,180,180,180,180,180,-135,
                                         -90,-90,-90,-90,-90,-45,
                                         0,0,0,0,0,45,
-                                        90,90,90,90,90,90};
+                                        90,90,90,90,90};
     
 
     public BoardPanel(int xCoord, int yCoord) {
@@ -75,7 +75,9 @@ public class BoardPanel extends javax.swing.JLayeredPane {
             } 
             // Left column
             else { 
-                yCoordSquare = (6 - (slotNum - 18)) * squareHeight;
+                xCoordSquare = 0;
+                squareHeight = (int) Math.round(PANEL_HEIGHT / 5);
+                yCoordSquare = ((5-(slotNum - 18)) * squareHeight)-65;
             }
             // Store coordinates in arrays
             squareXCoord[slotNum] = xCoordSquare;

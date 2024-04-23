@@ -203,7 +203,6 @@ public class SlotSquare extends javax.swing.JLayeredPane{
 
         detailDialog.add(dialogPanel, BorderLayout.CENTER);
         detailDialog.setVisible(true);
-
     }
 
 }
