@@ -76,8 +76,8 @@ public class BoardPanel extends javax.swing.JLayeredPane {
             // Left column
             else { 
                 xCoordSquare = 0;
-                squareHeight = (int) Math.round(PANEL_HEIGHT / 5);
-                yCoordSquare = ((5-(slotNum - 18)) * squareHeight)-65;
+                squareHeight = (int) Math.round(PANEL_HEIGHT / 5)-14;
+                yCoordSquare = ((5-(slotNum - 18)) * squareHeight)-25;
             }
             // Store coordinates in arrays
             squareXCoord[slotNum] = xCoordSquare;

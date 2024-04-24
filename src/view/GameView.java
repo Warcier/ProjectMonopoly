@@ -368,6 +368,7 @@ public class GameView extends javax.swing.JFrame {
             winCondition = true;
             this.nextPlayerBut.setEnabled(false);
             this.rollDiceBut.setEnabled(false);
+            this.tradeBut.setEnabled(false);
 
             JDialog gameOverDialog = new JDialog();
             gameOverDialog.setTitle("Game Over !!!");

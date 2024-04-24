@@ -20,13 +20,11 @@ public class Editor {
             if (node.getOwner()!=null) {
                 if (newOwner.getName().equals(node.getOwner().getName())) {
                     return;
-                }
-            }else{
+                }}
                 node.setOwner(newOwner);
                 newOwner.addProperty(node.getProperty());
             }
         }
-    }
 
     // Modify the balance of a player
     public void modifyPlayerBalance(Player player, int newBalance)  {
