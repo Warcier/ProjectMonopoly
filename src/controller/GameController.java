@@ -29,19 +29,9 @@ public class GameController {
         editor.setVisible(false); 
     }
 
-    public List<Player> getPlayers(){
-        return gameModel.getBoard().getPlayers();
-    }
-
-
     public void rollDice() {
         // Implement roll dice logic here
         gameModel.rollDice();
-    }
-
-    public Player getCurrentPlayer() {
-        // Get current player to show in view
-        return gameModel.getCurrPlayer();
     }
 
     public void  moveCurrentPlayer(Player player, int diceNum){
@@ -95,11 +85,6 @@ public class GameController {
     public void addPlayerActionTakenToView(Player player, String action){
         // add action message that taken by program auto
         gameView.addPlayerTakenAction(player, action);
-    }
-
-    public List<Property> getProperties() {
-        // get properties from model
-        return gameModel.getBoard().getProperties();
     }
 
     public void ShowAllPlayerNode(){
@@ -160,19 +145,19 @@ public class GameController {
 
     public void changeOwnerBut(int slot, Player newOwner) {
         gameModel.getEditor().modifyLandOwnership(slot, newOwner);
-        updateViewPlayerInfo(newOwner);
+        gameView.updateViewPlayerInfo(newOwner);
         
     }
 
     public void changeBalanceBut(Player player, int newBalance) {
         gameModel.getEditor().modifyPlayerBalance(player, newBalance);
-        updateViewPlayerInfo(player);
+        gameView.updateViewPlayerInfo(player);
     }
 
     public void changeLocationBut(Player player, int newLocation) {
         gameModel.getEditor().modifyPlayerLocation(player, newLocation);
         gameView.movePlayerLoca(player);
-        updateViewPlayerInfo(player);
+        gameView.updateViewPlayerInfo(player);
     }
 
     public void changeStatusBut(Player player, boolean isBankrupt) {
@@ -183,18 +168,7 @@ public class GameController {
 
     public void changeCurrentPlayerBut(Player newCurrentPlayer) {
         gameModel.getEditor().modifyCurrentPlayer(newCurrentPlayer);
-        changeCurrPlayer(newCurrentPlayer);
+        gameView.changeCurrentPlayer(newCurrentPlayer);
     }
-
-    public void updateViewPlayerInfo(Player player){
-        // update player information show on board
-        gameView.updatePlayerInfo(player);
-    }
-
-    private void changeCurrPlayer(Player player){
-        // change current player 
-        gameView.changeCurrentPlayer(player);
-    }
-
 
 }
