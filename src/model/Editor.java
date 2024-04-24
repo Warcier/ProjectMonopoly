@@ -43,6 +43,11 @@ public class Editor {
         Node newNode = board.getSlot(newLocation);
         if (newNode != null) {
             newNode.getPlayerOnThisLand().add(player);
+            if (newNode.getOwner() != null) {
+                if (!newNode.getOwner().getName().equals(player.getName())) {
+                    gameModel.payRent(player, newNode);
+                }
+            }
         }
     }
 
