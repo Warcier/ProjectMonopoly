@@ -20,6 +20,8 @@ public class Editor {
             if (node.getOwner()!=null) {
                 if (newOwner.getName().equals(node.getOwner().getName())) {
                     return;
+                }else{
+                    node.getOwner().removeProperty(node.getProperty());
                 }}
                 node.setOwner(newOwner);
                 newOwner.addProperty(node.getProperty());

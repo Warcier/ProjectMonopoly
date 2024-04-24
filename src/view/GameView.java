@@ -518,11 +518,9 @@ public class GameView extends javax.swing.JFrame {
         trackPanel.add(trackLabel, gbc);
     }
 
-   public void updateViewPlayerInfo(Player player){
+   public void updateViewPlayerInfo(){
     // update the playerInfo showing on the panel (editor)
-    if (player != null && player.getName().equals(currentPlayer.getName())) {
-        gamePlayer.updatePlayerInfoArea(player);
-        }
+        gamePlayer.updatePlayerInfoArea(currentPlayer);
     }
 
     public void changeCurrentPlayer(Player player){
@@ -555,7 +553,7 @@ public class GameView extends javax.swing.JFrame {
         }else{
             gameBoard.addPlayerOnBoard(player);
             gamePlayer.setPlayerActionLabel(player, "");
-            updateViewPlayerInfo(player);
+            updateViewPlayerInfo();
         }
     }
 

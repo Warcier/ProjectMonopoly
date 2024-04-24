@@ -145,19 +145,19 @@ public class GameController {
 
     public void changeOwnerBut(int slot, Player newOwner) {
         gameModel.getEditor().modifyLandOwnership(slot, newOwner);
-        gameView.updateViewPlayerInfo(newOwner);
+        gameView.updateViewPlayerInfo();
         
     }
 
     public void changeBalanceBut(Player player, int newBalance) {
         gameModel.getEditor().modifyPlayerBalance(player, newBalance);
-        gameView.updateViewPlayerInfo(player);
+        gameView.updateViewPlayerInfo();
     }
 
     public void changeLocationBut(Player player, int newLocation) {
         gameModel.getEditor().modifyPlayerLocation(player, newLocation);
         gameView.movePlayerLoca(player);
-        gameView.updateViewPlayerInfo(player);
+        gameView.updateViewPlayerInfo();
     }
 
     public void changeStatusBut(Player player, boolean isBankrupt) {
