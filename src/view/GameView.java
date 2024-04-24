@@ -165,7 +165,7 @@ public class GameView extends javax.swing.JFrame {
                     buyBut.setEnabled(true);
                 }
                 // update current player info and current player in player panel
-                setCurrentPlayer(gameController.getCurrentPlayer());
+                setCurrentPlayer(gameController.getCurrentPlayerToView());
                 // Check if the player is bankrupt after buy/pay rent
                 if (currentPlayer.isBankrupt()) {
                     // if yes show message
@@ -200,7 +200,7 @@ public class GameView extends javax.swing.JFrame {
                 //First check if next player is already bankrupted else skip
                 do{
                     gameController.nextPlayer();
-                    nextPlayer = gameController.getCurrentPlayer();
+                    nextPlayer = gameController.getCurrentPlayerToView();
                 }while(nextPlayer.isBankrupt());
 
                 // track player status
@@ -233,7 +233,7 @@ public class GameView extends javax.swing.JFrame {
                     gameController.buyProperty(currentPlayer);
                 }
                 // update current player info and current player in player panel
-                setCurrentPlayer(gameController.getCurrentPlayer());
+                setCurrentPlayer(gameController.getCurrentPlayerToView());
                 gamePlayer.updatePlayerInfoArea(currentPlayer);
                 // Check if the player is bankrupt after buy/pay rent
                 if (currentPlayer.isBankrupt()) {
@@ -368,6 +368,7 @@ public class GameView extends javax.swing.JFrame {
             winCondition = true;
             this.nextPlayerBut.setEnabled(false);
             this.rollDiceBut.setEnabled(false);
+            this.tradeBut.setEnabled(false);
 
             JDialog gameOverDialog = new JDialog();
             gameOverDialog.setTitle("Game Over !!!");
@@ -517,7 +518,7 @@ public class GameView extends javax.swing.JFrame {
         trackPanel.add(trackLabel, gbc);
     }
 
-   public void updatePlayerInfo(Player player){
+   public void updateViewPlayerInfo(Player player){
     // update the playerInfo showing on the panel (editor)
     if (player != null && player.getName().equals(currentPlayer.getName())) {
         gamePlayer.updatePlayerInfoArea(player);
@@ -544,7 +545,7 @@ public class GameView extends javax.swing.JFrame {
                 if (player.getName().equals(currentPlayer.getName())) {
                     do{
                         gameController.nextPlayer();
-                        nextPlayer = gameController.getCurrentPlayer();
+                        nextPlayer = gameController.getCurrentPlayerToView();
                     }while(nextPlayer.isBankrupt());
                     // change player panel
                     gamePlayer.changePlayerPanel(nextPlayer);
@@ -554,7 +555,7 @@ public class GameView extends javax.swing.JFrame {
         }else{
             gameBoard.addPlayerOnBoard(player);
             gamePlayer.setPlayerActionLabel(player, "");
-            updatePlayerInfo(player);
+            updateViewPlayerInfo(player);
         }
     }
 
